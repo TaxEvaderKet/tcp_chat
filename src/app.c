@@ -7,10 +7,14 @@
 #include <string.h>
 #include <netinet/ip.h>
 #include "../include/user_auth/user_auth.h"
-#include "../include/user_auth/read_info.h"
 
 #define PORT 6969
 #define BACKLOG_MAX 15 
+
+void remove_newline(char *s)
+{
+    s[strcspn(s, "\n")] = '\0';
+}
 
 int main(void)
 {
@@ -68,7 +72,7 @@ int main(void)
     puts("Enter password.");
     fgets(password, MAX_PASSWORD_LENGTH, stdin);
 
-    sanitize(username);
+    remove_newline(username);
 
     strncpy(usr.username, username, MAX_USERNAME_LENGTH);
     strncpy(usr.password, password, MAX_PASSWORD_LENGTH);

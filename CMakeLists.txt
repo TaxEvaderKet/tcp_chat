@@ -6,7 +6,6 @@ set(SODIUM_INCLUDE_DIR "/usr/include")
 
 set(USER_AUTH_SOURCES
     src/user_auth.c
-    src/read_info.c
 )
 
 add_library(userauth SHARED ${USER_AUTH_SOURCES})

@@ -166,30 +166,6 @@ src/app.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/tcp_chat.dir/build.make CMakeFiles/tcp_chat.dir/src/app.c.s
 .PHONY : src/app.c.s
 
-src/read_info.o: src/read_info.c.o
-.PHONY : src/read_info.o
-
-# target to build an object file
-src/read_info.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/userauth.dir/build.make CMakeFiles/userauth.dir/src/read_info.c.o
-.PHONY : src/read_info.c.o
-
-src/read_info.i: src/read_info.c.i
-.PHONY : src/read_info.i
-
-# target to preprocess a source file
-src/read_info.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/userauth.dir/build.make CMakeFiles/userauth.dir/src/read_info.c.i
-.PHONY : src/read_info.c.i
-
-src/read_info.s: src/read_info.c.s
-.PHONY : src/read_info.s
-
-# target to generate assembly for a file
-src/read_info.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/userauth.dir/build.make CMakeFiles/userauth.dir/src/read_info.c.s
-.PHONY : src/read_info.c.s
-
 src/user_auth.o: src/user_auth.c.o
 .PHONY : src/user_auth.o
 
@@ -227,9 +203,6 @@ help:
 	@echo "... src/app.o"
 	@echo "... src/app.i"
 	@echo "... src/app.s"
-	@echo "... src/read_info.o"
-	@echo "... src/read_info.i"
-	@echo "... src/read_info.s"
 	@echo "... src/user_auth.o"
 	@echo "... src/user_auth.i"
 	@echo "... src/user_auth.s"

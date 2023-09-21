@@ -27,13 +27,13 @@ Contribute if you want, don't if you don't.
 
 ### What you can and can't do
 
-- Refactoring: Help improve code quality and readability.
-- Work on custom libraries: either improve on a pre-existing library or create a new one.
-- Edit the README: Contribute by editing the README in a meaningful way.
-- Contribute to the Source Code: feel free to contribute to the codebase by editing pretty much anything in src and include.
+- **Refactoring:** Help improve code quality and readability.
+- **Work on custom libraries:** either improve on a pre-existing library or create a new one.
+- **Edit the README:** Contribute by editing the README in a meaningful way.
+- **Contribute to the Source Code:** feel free to contribute to the codebase by editing pretty much anything in src and include.
 
-- (You can't) Edit the Makefile: I maintain it myself. If you find an issue, let me know.
-- (Neither can you) Edit .gitignore: This is self-explanatory.
+- _(You can't)_ **Edit the Makefile:** I maintain it myself. If you find an issue, let me know.
+- _(Neither can you)_ **Edit .gitignore:** Unless your changes require you to do so.
 
 ### "How do I contribute?"
 1. Fork the repository

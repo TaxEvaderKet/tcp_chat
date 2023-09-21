@@ -32,8 +32,8 @@ Contribute if you want, don't if you don't.
 - **Edit the README:** Contribute by editing the README in a meaningful way.
 - **Contribute to the Source Code:** feel free to contribute to the codebase by editing pretty much anything in src and include.
 
-- _(You can't)_ **Edit the Makefile:** I maintain it myself. If you find an issue, let me know.
-- _(Neither can you)_ **Edit .gitignore:** Unless your changes require you to do so.
+- _(You can't)_ **Edit the Makefile:** Unless the changes you made require you to do so. In which case, contact me -- I'll edit the CMake list.
+- _(Neither can you)_ **Edit .gitignore:** Same as the above applies here, too.
 
 ### "How do I contribute?"
 1. Fork the repository

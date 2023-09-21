@@ -1,6 +1,6 @@
 # TCP_CHAT
 <p>This is a very unfinished little project of mine.</p>
-[Contribute if you want](https://github.com/TaxEvaderKet/tcp_chat#contributing), don't if you don't.
+Contribute if you want, don't if you don't.
 
 ## Prerequisites
 - GCC and Make, latest version

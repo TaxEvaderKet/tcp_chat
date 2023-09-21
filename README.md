@@ -25,10 +25,10 @@ Contribute if you want, don't if you don't.
 
 ## Contributing
 <p>You can contribute in the following ways:</p>
-- Refactoring: Help improve code quality and readability.
-- Work on custom libraries: either improve on a pre-existing library or create a new one.
-- Edit the README: Contribute by editing the README in a meaningful way.
-- Contribute to the Source Code: feel free to contribute to the codebase by editing pretty much anything in src and include.
+* Refactoring: Help improve code quality and readability.
+* Work on custom libraries: either improve on a pre-existing library or create a new one.
+* Edit the README: Contribute by editing the README in a meaningful way.
+* Contribute to the Source Code: feel free to contribute to the codebase by editing pretty much anything in src and include.
 
 <br />
 <p>Here is what you **don't** contribute to:</p>

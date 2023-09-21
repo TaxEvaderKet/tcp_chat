@@ -31,9 +31,9 @@ Contribute if you want, don't if you don't.
 - Work on custom libraries: either improve on a pre-existing library or create a new one.
 - Edit the README: Contribute by editing the README in a meaningful way.
 - Contribute to the Source Code: feel free to contribute to the codebase by editing pretty much anything in src and include.
-<br />
-- The Makefile: I maintain it myself. If you find an issue, let me know.
-- .gitignore: This is self-explanatory.
+
+- (You can't) Edit he Makefile: I maintain it myself. If you find an issue, let me know.
+- (Neither can you) Edit .gitignore: This is self-explanatory.
 
 ### "How do I contribute?"
 1. Fork the repository

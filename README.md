@@ -2,7 +2,7 @@
 <p>This is a very unfinished little project of mine</p>
 Contribute if you want, don't if you don't
 
-## PREREQUISITES
+## Prerequisites
 - A recent version of GCC and Make
 - A Linux computer or WSL
 - libsodium

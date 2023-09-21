@@ -2,8 +2,8 @@
 <p>This is a very unfinished little project of mine</p>
 Contribute if you want, don't if you don't
 
-## PREREQUISITES
-- A recent version of GCC and Make
+## Prerequisites
+- GCC <=v12.0.0 and Make <=4.0.0
 - A Linux computer or WSL
 - libsodium
 

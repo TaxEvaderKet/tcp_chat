@@ -32,7 +32,7 @@ Contribute if you want, don't if you don't.
 - Edit the README: Contribute by editing the README in a meaningful way.
 - Contribute to the Source Code: feel free to contribute to the codebase by editing pretty much anything in src and include.
 
-- (You can't) Edit he Makefile: I maintain it myself. If you find an issue, let me know.
+- (You can't) Edit the Makefile: I maintain it myself. If you find an issue, let me know.
 - (Neither can you) Edit .gitignore: This is self-explanatory.
 
 ### "How do I contribute?"

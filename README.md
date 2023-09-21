@@ -1,6 +1,6 @@
 # TCP_CHAT
-<p>This is a very unfinished little project of mine</p>
-Contribute if you want, don't if you don't
+<p>This is a very unfinished little project of mine.</p>
+[Contribute if you want](https://github.com/TaxEvaderKet/tcp_chat#contributing), don't if you don't.
 
 ## Prerequisites
 - GCC and Make, latest version
@@ -22,3 +22,52 @@ Contribute if you want, don't if you don't
     - `sudo dnf install gcc make`
 - Arch Linux
     - `sudo pacman -S gcc make`
+
+## Contributing
+<p>You can contribute in the following ways:</p>
+- **Refactoring: ** Help improve code quality and readability.
+- **Work on custom libraries: ** either improve on a pre-existing library or create a new one.
+- **Edit the README: ** Contribute by editing the README in a meaningful way.
+- **Contribute to the Source Code: ** feel free to contribute to the codebase by editing pretty much anything in src and include.
+
+<br />
+<p>Here is what you **don't** contribute to:</p>
+- **The Makefile: ** I maintain it myself. If you find an issue, let me know.
+- **.gitignore: ** This is self-explanatory.
+
+<br />
+<p>"How do I contribute?"</p>
+1. Fork the repository
+    - by clicking the "Fork" button in the top right.
+
+2. Clone your fork to your local machine
+    - Open your terminal
+    - Run `git clone https://github.com/your-username/tcp_chat.git`, make sure to replace "your-username" with your GitHub username.
+
+3. Create a new branch
+    - `cd tcp_chat`
+    - `git checkout -b feature-name`
+
+4. Make your changes
+    - Make your changes to the codebase. You can add new features, fix bugs, or make improvements.
+    - Make sure that your changes follow coding conventions and maintain code readability.
+
+5. Test your changes
+    - I needn't say anything about this.
+
+6. Commit your changes
+    - `git commit -m "add feature: description"`
+
+7. Push your changes
+    - `git push origin feature-name`
+
+8. Create a pull request
+    - Go to your forked repository.
+    - Click the "Compare & pull request" button.
+    - Review your changes and provide a clear description of what the changes add.
+
+9. Wait for review and feedback
+
+10. Merge your contribution
+
+**Congrats. You've contributed.**

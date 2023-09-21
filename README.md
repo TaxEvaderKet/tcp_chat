@@ -3,7 +3,6 @@
 Contribute if you want, don't if you don't
 
 ## PREREQUISITES
-- A decently recent version of CMake
 - A recent version of GCC and Make
 - A Linux computer or WSL
 - libsodium

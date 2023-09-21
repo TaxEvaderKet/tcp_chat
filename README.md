@@ -52,7 +52,7 @@ Contribute if you want, don't if you don't.
     - Make sure that your changes follow coding conventions and maintain code readability.
 
 5. Test your changes
-    - I needn't say anything about this.
+    - To ensure that the code works.
 
 6. Commit your changes
     - `git commit -m "add feature: description"`

@@ -4,6 +4,7 @@ Contribute if you want, don't if you don't
 
 ## Prerequisites
 - GCC <=v12.0.0 and Make <=4.0.0
+- A recent version of GCC and Make
 - A Linux computer or WSL
 - libsodium
 

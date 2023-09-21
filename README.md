@@ -25,6 +25,7 @@ Contribute if you want, don't if you don't.
 
 ## Contributing
 <p>You can contribute in the following ways:</p>
+<br />
 * Refactoring: Help improve code quality and readability.
 * Work on custom libraries: either improve on a pre-existing library or create a new one.
 * Edit the README: Contribute by editing the README in a meaningful way.
@@ -32,6 +33,7 @@ Contribute if you want, don't if you don't.
 
 <br />
 <p>Here is what you **don't** contribute to:</p>
+<br />
 - The Makefile: I maintain it myself. If you find an issue, let me know.
 - .gitignore: This is self-explanatory.
 

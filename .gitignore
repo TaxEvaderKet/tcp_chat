@@ -1,6 +1,7 @@
 .vscode
 CMake*
 !CMakeLists.txt
+*.cmake
 Makefile
 releases
 bin

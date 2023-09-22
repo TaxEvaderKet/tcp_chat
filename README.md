@@ -10,6 +10,7 @@
 <p>What I have made so far:</p>
 
 - Secure password hashing and data storage.
+
 Contribute if you want, don't if you don't.
 
 

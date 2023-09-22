@@ -3,3 +3,5 @@ CMakeFiles
 CMakeCache.txt
 releases
 bin
+cmake_install.cmake
+Makefile

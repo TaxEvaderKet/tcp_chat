@@ -1,6 +1,6 @@
 # TCP_CHAT
 <p>This is a very unfinished little project of mine.</p>
-[Contribute if you want](https://github.com/TaxEvaderKet/tcp_chat#contributing), don't if you don't.
+Contribute if you want, don't if you don't.
 
 ## Prerequisites
 - CMake v3.2 or later
@@ -25,19 +25,15 @@
     - `sudo pacman -S gcc make cmake`
 
 ## Contributing
-<p>You can contribute in the following ways:</p>
-- **Refactoring: ** Help improve code quality and readability.
-- **Work on custom libraries: ** either improve on a pre-existing library or create a new one.
-- **Edit the README: ** Contribute by editing the README in a meaningful way.
-- **Contribute to the Source Code: ** feel free to contribute to the codebase by editing pretty much anything in src and include.
 
-<br />
-<p>Here is what you **don't** contribute to:</p>
-- **The Makefile: ** I maintain it myself. If you find an issue, let me know.
-- **.gitignore: ** This is self-explanatory.
+### What you can do
 
-<br />
-<p>"How do I contribute?"</p>
+- **Refactoring:** Help improve code quality and readability.
+- **Work on custom libraries:** either improve on a pre-existing library or create a new one.
+- **Edit the README:** Contribute by editing the README in a meaningful way.
+- **Contribute to the Source Code:** feel free to contribute to the codebase by editing pretty much anything in src and include.
+
+### "How do I contribute?"
 1. Fork the repository
     - by clicking the "Fork" button in the top right.
 
@@ -54,7 +50,7 @@
     - Make sure that your changes follow coding conventions and maintain code readability.
 
 5. Test your changes
-    - I needn't say anything about this.
+    - To ensure that the code works.
 
 6. Commit your changes
     - `git commit -m "add feature: description"`

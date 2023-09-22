@@ -48,6 +48,7 @@ Contribute if you want, don't if you don't.
 4. Make your changes
     - Make your changes to the codebase. You can add new features, fix bugs, or make improvements.
     - Make sure that your changes follow coding conventions and maintain code readability.
+        - Regarding coding conventions, just adapt to the already existing code in the codebase.
 
 5. Test your changes
     - To ensure that the code works.

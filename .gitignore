@@ -1,7 +1,6 @@
 .vscode
-CMakeFiles
-CMakeCache.txt
+CMake*
+!CMakeLists.txt
+Makefile
 releases
 bin
-cmake_install.cmake
-Makefile

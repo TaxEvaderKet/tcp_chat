@@ -1,28 +1,43 @@
 # TCP_CHAT
-<p>This is a very unfinished little project of mine.</p>
+<p>This is an ongoing project of mine. As of now, it is undergoing early development.</p>
+<p>What I'm hoping to achieve is a functioning chatting application with the following features:</p>
+
+- Secure password hashing using libsodium/argon2id.
+- An OK (or better)-looking TUI.
+- Channels.
+- @mentioning users.
+
+<p>What I have made so far:</p>
+
+- Secure password hashing and data storage.
 Contribute if you want, don't if you don't.
 
-## Prerequisites
-- CMake v3.2 or later
-- GCC and Make, v13 and v4.4 (or later) respectively
-- A Linux computer or WSL
-- libsodium
 
-## Installing libsodium
-- Debian and Debian-based 
-    - `sudo apt-get install libsodium-dev` or `sudo apt install libsodium-dev`
-- RHEL and Fedora-based
-    - `sudo dnf install libsodium-devel`
-- Arch Linux
-    - `sudo pacman -S libsodium`
+### Prerequisites
+- CMake v3.2 or later.
+- GCC and Make, v13.0.0 and v4.4.0 (or later) respectively.
+- A Linux computer or WSL.
+- libsodium.
 
-## Installing GCC, Make and CMake
+## How-Tos
+
+### Installing the prerequisites
 - Debian and Debian-based 
-    - `sudo apt-get install gcc make cmake` or `sudo apt install gcc make cmake`
+    - `sudo apt-get install gcc make cmake libsodium-dev`
+        - or, on Ubuntu and variants, `sudo apt install gcc make cmake libsodium-dev`
 - RHEL and Fedora-based
-    - `sudo dnf install gcc make cmake`
+    - `sudo dnf install gcc make cmake libsodium-devel`
 - Arch Linux
-    - `sudo pacman -S gcc make cmake`
+    - `sudo pacman -S gcc make cmake libsodium`
+- Windows Subsystem for Linux (WSL):
+    - Follow the Linux installation instructions relevant to your WSL distribution.
+
+### Compiling and running the project from source
+1. Once the prerequisites are installed, you download the source code by clicking on "Code" and then click "Download ZIP".
+2. Then, you unzip the ZIP file, and `cd` into the directory it was extracted to.
+3. Ensure that you are in the directory and run `cmake .`.
+4. After that's done, you compile the project by running `make`.
+5. Once finished compiling, you can simply run `./bin/tcp_chat` and test out what is available right now.
 
 ## Contributing
 
@@ -49,9 +64,10 @@ Contribute if you want, don't if you don't.
     - Make your changes to the codebase. You can add new features, fix bugs, or make improvements.
     - Make sure that your changes follow coding conventions and maintain code readability.
         - Regarding coding conventions, just adapt to the already existing code in the codebase.
+            - This includes adding documentation if necessary.
 
 5. Test your changes
-    - To ensure that the code works.
+    - By checking outputs and handling different cases, then, if there's something to fix, do so.
 
 6. Commit your changes
     - `git commit -m "add feature: description"`

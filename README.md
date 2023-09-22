@@ -3,7 +3,8 @@
 [Contribute if you want](https://github.com/TaxEvaderKet/tcp_chat#contributing), don't if you don't.
 
 ## Prerequisites
-- GCC and Make, latest version
+- CMake v3.2 or later
+- GCC and Make, v13 and v4.4 (or later) respectively
 - A Linux computer or WSL
 - libsodium
 
@@ -15,13 +16,13 @@
 - Arch Linux
     - `sudo pacman -S libsodium`
 
-## Installing GCC and GNU Make
+## Installing GCC, Make and CMake
 - Debian and Debian-based 
-    - `sudo apt-get install gcc make` or `sudo apt install gcc make`
+    - `sudo apt-get install gcc make cmake` or `sudo apt install gcc make cmake`
 - RHEL and Fedora-based
-    - `sudo dnf install gcc make`
+    - `sudo dnf install gcc make cmake`
 - Arch Linux
-    - `sudo pacman -S gcc make`
+    - `sudo pacman -S gcc make cmake`
 
 ## Contributing
 <p>You can contribute in the following ways:</p>

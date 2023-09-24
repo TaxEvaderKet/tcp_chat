@@ -1,17 +1,4 @@
-#include <sodium/core.h>
-#include <sodium/crypto_pwhash.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "../include/user_auth/user_auth.h"
-#include <sodium.h>
-#include <sys/types.h>
-#include <unistd.h>
-
-#define SALT_LENGTH 16
-#define HASH_LENGTH (MAX_PASSWORD_LENGTH * 2)
 
 // Helper function. No documentation necessary.
 int hash_password(const char *password, uint8_t *hash, uint8_t *salt)
@@ -38,7 +25,7 @@ int hash_password(const char *password, uint8_t *hash, uint8_t *salt)
  * @param pointer to a user struct
  * @returns 1 on error, 0 on success
 */
-int create_user(User *user)
+int signup(User *user)
 {
     uint8_t hash[HASH_LENGTH];
     uint8_t salt[SALT_LENGTH];
@@ -46,7 +33,7 @@ int create_user(User *user)
 
     if (hash_password(user->password, hash, salt) != 0)
     {
-        fprintf(stderr, "failed to hash password\n");
+        fprintf(stderr, "\x1b[31mfailed to hash password\x1b[0m\n");
         return EXIT_FAILURE;
     }
     
@@ -54,11 +41,13 @@ int create_user(User *user)
     {
         FILE *userdata = fopen("userdata", "w");
         fprintf(userdata, "%s %s %s\n", user->username, hash, salt);
+        puts("\x1b[32mSuccessfully created the userdata file and saved user data.\x1b[0m");
         return EXIT_SUCCESS;
     }
 
     FILE *userdata = fopen("userdata", "a");
     fprintf(userdata, "%s %s %s\n", user->username, hash, salt);
+    puts("\x1b[32mSuccessfully saved user data.\x1b[0m");
 
     fclose(userdata);
 
@@ -76,7 +65,7 @@ int login(User *user)
     
     if (userdata == NULL)
     {
-        fprintf(stderr, "Could not open userdata file.");
+        fprintf(stderr, "\x1b[31mCould not open userdata file.\x1b[0m");
         return EXIT_FAILURE;
     }
     
@@ -106,7 +95,7 @@ int login(User *user)
         if (memcmp(stored_hash, hashed_password, sizeof(stored_hash)) == 0)
         {
             user->logged_in = 1;
-            puts("Login successful.");
+            puts("\x1b[32mLogin successful.\x1b[0m");
             fclose(userdata);
             return EXIT_SUCCESS;
         }

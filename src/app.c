@@ -7,10 +7,12 @@
 #include <string.h>
 #include <netinet/ip.h>
 #include "../include/user_auth/user_auth.h"
+#include "../include/chat/filter.h"
 
 #define PORT 6969
 #define BACKLOG_MAX 15 
 
+// I'll probably use this a few times here and there.
 void remove_newline(char *s)
 {
     s[strcspn(s, "\n")] = '\0';
@@ -18,65 +20,29 @@ void remove_newline(char *s)
 
 int main(void)
 {
-/*  
- *  int socket_fd, client_fd;
-    struct sockaddr_in sockaddr, client_addr;
-
-    if ((socket_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-    {
-        perror("socket");
-        return EXIT_FAILURE;
-    }
-
-    sockaddr.sin_port = htons(PORT);
-    sockaddr.sin_family = AF_INET;
-    sockaddr.sin_addr.s_addr = INADDR_ANY;
-    
-    socklen_t socket_len = sizeof(sockaddr);
-    socklen_t client_len = sizeof(client_addr);
-
-    if (bind(socket_fd, (struct sockaddr *)&sockaddr, socket_len) < 0)
-    {
-        perror("bind");
-        return EXIT_FAILURE;
-    }
-    
-    if (listen(socket_fd, BACKLOG_MAX) < 0) 
-    {
-        perror("listen");
-        return EXIT_FAILURE;
-    }
-    
-    printf("Listening on the port %d\n", PORT);
-
-    for (;;)
-    {
-        client_fd = accept(socket_fd, (struct sockaddr *)&client_addr, &client_len);
-        
-        char *msg = "Hello World\n";
-
-        send(client_fd, (void *)msg, strlen(msg), 0);
-    }
-    
-    close(socket_fd);
-
-    return EXIT_SUCCESS;
-    */
+    // Networking stuff is yet to be added. I want to get user_auth out first, so I can implement it more easily.
     
     User usr;
-    char username[MAX_USERNAME_LENGTH];
-    char password[MAX_PASSWORD_LENGTH];
+    char *username;
+    char *password;
 
     puts("Enter username.");
     fgets(username, MAX_USERNAME_LENGTH, stdin);
-    puts("Enter password.");
-    fgets(password, MAX_PASSWORD_LENGTH, stdin);
+    password = getpass("Enter password.\n");
 
     remove_newline(username);
 
     strncpy(usr.username, username, MAX_USERNAME_LENGTH);
     strncpy(usr.password, password, MAX_PASSWORD_LENGTH);
     usr.logged_in = 1;
+   
+    signup(&usr);
+
+    char msg[MAX_MESSAGE_LENGTH];
+
+    fgets(msg, sizeof(msg), stdin);
     
-    create_user(&usr);
+    strreplace(msg, "\x1b", "");
+
+    printf("%s\n", msg);
 }

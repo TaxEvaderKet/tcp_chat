@@ -15,7 +15,7 @@ Contribute if you want, don't if you don't.
 
 
 ### Prerequisites
-- CMake v3.2 or later.
+- CMake v3.20 or later.
 - GCC and Make, v13.0.0 and v4.4.0 (or later) respectively.
 - A Linux computer or WSL.
 - libsodium.

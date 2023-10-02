@@ -9,7 +9,7 @@ int hash_password(const char *password, char *hash, uint8_t *salt)
         return EXIT_FAILURE;
     }
 
-    randombytes_buf(salt, sizeof(salt));
+    randombytes_buf(salt, crypto_pwhash_SALTBYTES);
 
     if (crypto_pwhash_str((char *)hash, password, strlen(password), crypto_pwhash_OPSLIMIT_INTERACTIVE, crypto_pwhash_MEMLIMIT_INTERACTIVE) != 0)
     {
@@ -91,7 +91,7 @@ int login(User *user)
             fclose(userdata);
             return EXIT_SUCCESS;
         }
-    } while (fgets(line, sizeof(line), userdata) != NULL);
+    }
     
     fclose(userdata);
     fprintf(stderr, "Incorrect username or password.\n");

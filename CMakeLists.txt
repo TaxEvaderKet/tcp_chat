@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.20)
 
 project(userauth)
 
-set(CMAKE_BUILD_TYPE Debug)
-
 set(SODIUM_INCLUDE_DIR "/usr/include")
 
 set(USER_AUTH_SOURCES

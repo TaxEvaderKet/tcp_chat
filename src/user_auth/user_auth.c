@@ -29,7 +29,6 @@ int signup(User *user)
 {
     char hash[HASH_LENGTH];
     uint8_t salt[SALT_LENGTH];
-    char hashed_password[HASH_LENGTH + 1]; 
 
     if (hash_password(user->password, hash, salt) != 0)
     {
@@ -69,14 +68,14 @@ int login(User *user)
         return EXIT_FAILURE;
     }
     
-    char line[MAX_USERNAME_LENGTH + HASH_LENGTH + 1];
-
+    char line[MAX_USERNAME_LENGTH + HASH_LENGTH + SALT_LENGTH + 1];
+    
     while (fgets(line, sizeof(line), userdata) != NULL)
     {
         char username[MAX_USERNAME_LENGTH + 1];
         char stored_hash[HASH_LENGTH];
 
-        if (sscanf(line, "%s %s\n", username, stored_hash) != 3)
+        if (sscanf(line, "%s %s\n", username, stored_hash) != 2)
         {
             continue;
         }
@@ -92,7 +91,7 @@ int login(User *user)
             fclose(userdata);
             return EXIT_SUCCESS;
         }
-    }
+    } while (fgets(line, sizeof(line), userdata) != NULL);
     
     fclose(userdata);
     fprintf(stderr, "Incorrect username or password.\n");

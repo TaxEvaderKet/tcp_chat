@@ -1,5 +1,4 @@
 #ifndef USER_AUTH
-
 #define USER_AUTH
 #define MAX_PASSWORD_LENGTH 64
 #define MAX_USERNAME_LENGTH 32
@@ -26,6 +25,6 @@ typedef struct
 } User;
 
 int signup(User *user);
-
 int login(User *user);
+
 #endif // !USER_AUTH

@@ -1,16 +1,4 @@
-#include <netinet/in.h>
-#include <stdio.h>
-#include <arpa/inet.h>
-#include <stdlib.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <string.h>
-#include <netinet/ip.h>
-#include "../include/user_auth/user_auth.h"
-#include "../include/chat/filter.h"
-
-#define PORT 6969
-#define BACKLOG_MAX 15 
+#include "../include/chat/net.h"
 
 // I'll probably use this a few times here and there.
 void remove_newline(char *s)
@@ -39,10 +27,25 @@ int main(void)
     signup(&usr);
 
     char msg[MAX_MESSAGE_LENGTH];
-
+    
+    puts("Enter a uh... string.");
     fgets(msg, sizeof(msg), stdin);
     
     strreplace(msg, "\x1b", "");
 
     printf("%s\n", msg);
+
+    User login_test;
+    char login_name[MAX_USERNAME_LENGTH + 1];
+    char *login_password;
+
+    puts("Enter username.");
+    fgets(login_name, MAX_USERNAME_LENGTH, stdin);
+    login_password = getpass("Enter password.\n");
+
+    remove_newline(login_name);
+
+    strncpy(login_test.username, login_name, MAX_USERNAME_LENGTH);
+    strncpy(login_test.password, login_password, MAX_PASSWORD_LENGTH);
+    login(&login_test);
 }

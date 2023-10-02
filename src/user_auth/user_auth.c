@@ -1,7 +1,7 @@
-#include "../include/user_auth/user_auth.h"
+#include "../../include/user_auth/user_auth.h"
 
 // Helper function. No documentation necessary.
-int hash_password(const char *password, uint8_t *hash, uint8_t *salt)
+int hash_password(const char *password, char *hash, uint8_t *salt)
 {
     if (sodium_init() < 0)
     {
@@ -27,7 +27,7 @@ int hash_password(const char *password, uint8_t *hash, uint8_t *salt)
 */
 int signup(User *user)
 {
-    uint8_t hash[HASH_LENGTH];
+    char hash[HASH_LENGTH];
     uint8_t salt[SALT_LENGTH];
     char hashed_password[HASH_LENGTH + 1]; 
 
@@ -40,13 +40,13 @@ int signup(User *user)
     if (access("userdata", F_OK) != 0)
     {
         FILE *userdata = fopen("userdata", "w");
-        fprintf(userdata, "%s %s %s\n", user->username, hash, salt);
+        fprintf(userdata, "%s %s\n", user->username, hash);
         puts("\x1b[32mSuccessfully created the userdata file and saved user data.\x1b[0m");
         return EXIT_SUCCESS;
     }
 
     FILE *userdata = fopen("userdata", "a");
-    fprintf(userdata, "%s %s %s\n", user->username, hash, salt);
+    fprintf(userdata, "%s %s\n", user->username, hash);
     puts("\x1b[32mSuccessfully saved user data.\x1b[0m");
 
     fclose(userdata);
@@ -69,15 +69,14 @@ int login(User *user)
         return EXIT_FAILURE;
     }
     
-    char line[HASH_LENGTH + MAX_USERNAME_LENGTH + SALT_LENGTH + 1];
-    
-    while (fgets(line, sizeof(line), userdata))
+    char line[MAX_USERNAME_LENGTH + HASH_LENGTH + 1];
+
+    while (fgets(line, sizeof(line), userdata) != NULL)
     {
         char username[MAX_USERNAME_LENGTH + 1];
         char stored_hash[HASH_LENGTH];
-        char stored_salt[SALT_LENGTH];
 
-        if (sscanf(line, "%s %s %s\n", username, stored_hash, stored_salt) != 3)
+        if (sscanf(line, "%s %s\n", username, stored_hash) != 3)
         {
             continue;
         }
@@ -87,14 +86,8 @@ int login(User *user)
             continue;
         }
 
-        uint8_t hash[HASH_LENGTH];
-        char hashed_password[HASH_LENGTH + 1];
-
-        hash_password(user->password, hash, (uint8_t *)stored_salt);
-
-        if (memcmp(stored_hash, hashed_password, sizeof(stored_hash)) == 0)
+        if (crypto_pwhash_str_verify(stored_hash, user->password, strlen(user->password)) == 0)
         {
-            user->logged_in = 1;
             puts("\x1b[32mLogin successful.\x1b[0m");
             fclose(userdata);
             return EXIT_SUCCESS;
@@ -102,6 +95,6 @@ int login(User *user)
     }
     
     fclose(userdata);
-    fprintf(stderr, "Incorrect username or password.");
+    fprintf(stderr, "Incorrect username or password.\n");
     return EXIT_FAILURE;
 }

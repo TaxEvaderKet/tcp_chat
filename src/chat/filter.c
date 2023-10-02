@@ -1,4 +1,4 @@
-#include "../include/chat/filter.h"
+#include "../../include/chat/filter.h"
 
 /*
  * Takes in a string, finds substrings that match the given one, and replace it with the one specified.

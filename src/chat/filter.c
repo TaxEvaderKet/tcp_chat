@@ -8,7 +8,7 @@
 */
 void strreplace(char *str, char *search, char *replace)
 {
-    if (strlen(search) >= strlen(str))
+    if (strlen(search) > strlen(str) || strlen(replace) > strlen(str))
     {
         puts("\x1b[31mWhat the hell are you doing?\x1b[0m");
         exit(1);
@@ -21,9 +21,9 @@ void strreplace(char *str, char *search, char *replace)
     {
         strncpy(buffer, str, p - str);
         buffer[p - str] = '\0';
-        strncat(buffer, replace, MAX_REPLACE_SIZE);
-        strncat(buffer, p + strlen(search), MAX_SEARCH_SIZE);
-        strncpy(str, buffer, MAX_MESSAGE_LENGTH);
+        strncat(buffer, replace, MAX_REPLACE_SIZE - 1);
+        strncat(buffer, p + strlen(search), MAX_SEARCH_SIZE - 1);
+        strncpy(str, buffer, MAX_MESSAGE_LENGTH - 1);
         p++;
     }
 }

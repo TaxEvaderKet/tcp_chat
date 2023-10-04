@@ -1,9 +1,9 @@
 #ifndef USER_AUTH
 #define USER_AUTH
-#define MAX_PASSWORD_LENGTH 64
-#define MAX_USERNAME_LENGTH 32
+#define MAX_PASSWORD_LENGTH 64 + 1
+#define MAX_USERNAME_LENGTH 32 + 1
 #define SALT_LENGTH 16
-#define HASH_LENGTH (MAX_PASSWORD_LENGTH * 2)
+#define TOTAL_ARGON2ID_LENGTH 98 + 1
 
 #include <sodium/core.h>
 #include <sodium/crypto_pwhash.h>

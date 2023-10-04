@@ -11,7 +11,7 @@ int init_socket(portnum_t port)
 {
     if (port > USHRT_MAX || port < 1)
     {
-        fprintf(stderr, "\x1b[31mPort number cannot exceed %d or be less than 1 \x1b[34m(TIP: use port numbers greater than 1000)\x1b[0m", USHRT_MAX);
+        fprintf(stderr, "\x1b[31mPort number cannot exceed %d or be less than 1 \x1b[34m(TIP: use port numbers greater than 1000)\n\x1b[0m", USHRT_MAX);
         return PORT_RANGE_ERR;
     }
 

@@ -4,5 +4,4 @@ CMake*
 *.cmake
 Makefile
 releases
-bin
-lib
+out

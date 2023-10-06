@@ -1,22 +1,12 @@
 # TCP_CHAT
 <p>This is an ongoing project of mine. As of now, it is undergoing early development.</p>
-<p>What I'm hoping to achieve is a functioning chatting application with the following features:</p>
-
-- Secure password hashing using libsodium/argon2id.
-- An OK (or better)-looking TUI.
-- Channels.
-- @mentioning users.
-
-<p>What I have made so far:</p>
-
-- Secure password hashing and data storage.
 
 Contribute if you want, don't if you don't.
 
 
 ### Prerequisites
 - CMake v3.20 or later.
-- GCC (or Clang) and Make, v13.0.0, v16 and v4.4.0 (or later) respectively.
+- GCC v13.0.0 (or Clang-16) and Make v4.4.0. (Later versions should also work.)
 - A Linux computer or WSL.
 - libsodium.
 - OpenSSL
@@ -26,13 +16,15 @@ Contribute if you want, don't if you don't.
 
 ### Installing the prerequisites
 - If you wish to use Clang instead of GCC, just replace 'gcc' with 'clang' on whichever command is relevant to your distribution.
-- Debian and Debian-based 
-    - `sudo apt-get install git gcc make cmake libsodium-dev`
-        - or, on Ubuntu and variants, `sudo apt install git gcc make cmake libsodium-dev`
+- Debian and Debian-based
+    - Update the package lists with `sudo apt-get update`, this also applies to Ubuntu
+    - `sudo apt-get install git gcc make cmake libsodium-dev libssl-dev`
+        - or, on Ubuntu and variants, `sudo apt install git gcc make cmake libsodium-dev libssl-dev`
 - RHEL and Fedora-based
-    - `sudo dnf install git gcc make cmake libsodium-devel`
+    - `sudo dnf install git gcc make cmake libsodium-devel openssl-devel`
 - Arch Linux
-    - `sudo pacman -S git gcc make cmake libsodium`
+    - `sudo pacman -Syu`
+    - `sudo pacman -S git gcc make cmake libsodium openssl`
 - Windows Subsystem for Linux (WSL):
     - Follow the Linux installation instructions relevant to your WSL distribution.
 

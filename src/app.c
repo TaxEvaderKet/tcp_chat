@@ -42,6 +42,30 @@ int main(void)
     {
         OPENSSL_cleanse(login_password, sizeof(login_password));
     }
+
+    char yn;
+
+    puts("Do you want to test logout? [y/n]");
+    yn = getchar();
+
+    if (yn == EOF)
+    {
+        return EXIT_FAILURE;
+    }
     
+    switch (yn)
+    {
+        case 'y':
+            logout(&login_test);
+            break;
+
+        case 'n':
+            break;
+        
+        default:
+            puts("Invalid option");
+            return EXIT_FAILURE;
+    }
+
     return EXIT_SUCCESS;
 }

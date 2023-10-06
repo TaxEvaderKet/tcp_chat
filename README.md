@@ -16,29 +16,36 @@ Contribute if you want, don't if you don't.
 
 ### Prerequisites
 - CMake v3.20 or later.
-- GCC and Make, v13.0.0 and v4.4.0 (or later) respectively.
+- GCC (or Clang) and Make, v13.0.0, v16 and v4.4.0 (or later) respectively.
 - A Linux computer or WSL.
 - libsodium.
+- OpenSSL
+- git
 
 ## How-Tos
 
 ### Installing the prerequisites
+- If you wish to use Clang instead of GCC, just replace 'gcc' with 'clang' on whichever command is relevant to your distribution.
 - Debian and Debian-based 
-    - `sudo apt-get install gcc make cmake libsodium-dev`
-        - or, on Ubuntu and variants, `sudo apt install gcc make cmake libsodium-dev`
+    - `sudo apt-get install git gcc make cmake libsodium-dev`
+        - or, on Ubuntu and variants, `sudo apt install git gcc make cmake libsodium-dev`
 - RHEL and Fedora-based
-    - `sudo dnf install gcc make cmake libsodium-devel`
+    - `sudo dnf install git gcc make cmake libsodium-devel`
 - Arch Linux
-    - `sudo pacman -S gcc make cmake libsodium`
+    - `sudo pacman -S git gcc make cmake libsodium`
 - Windows Subsystem for Linux (WSL):
     - Follow the Linux installation instructions relevant to your WSL distribution.
 
 ### Compiling and running the project from source
 1. Once the prerequisites are installed, you download the source code by clicking on "Code" and then click "Download ZIP".
-2. Then, you unzip the ZIP file, and `cd` into the directory it was extracted to.
-3. Ensure that you are in the directory and run `cmake .`.
-4. After that's done, you compile the project by running `make`.
-5. Once finished compiling, you can simply run `./bin/tcp_chat` and test out what is available right now.
+    - Or, on WSL, you should just clone the repository with `git clone https://github.com/TaxEvaderKet/tcp_chat`
+3. Then, you unzip the ZIP file, and `cd` into the directory it was extracted to.
+    - `cd` into the directory if you opted to clone the repo instead.
+5. Ensure that you are in the directory and run `cmake .`.
+6. After that's done, you compile the project by running `make`.
+7. Once finished compiling, you can simply run `./bin/app` and test out what is available right now.
+
+Note that to change the compiler, you must pass in `-DCMAKE_C_COMPILER=/path/to/your/compiler`. 
 
 ## Contributing
 

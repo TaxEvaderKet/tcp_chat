@@ -20,7 +20,7 @@ int hash_password(const char *password, char *hash, uint8_t *salt)
 }
 
 /*
- * Takes in user data, hashes the password, and saves username, password hash, and salt to a file
+ * Takes in user data, hashes the password, and saves username and argon2id digest to a file
  * @param pointer to a user struct
  * @returns 1 on error, 0 on success
 */
@@ -28,6 +28,12 @@ int signup(User *user)
 {
     char hash[crypto_pwhash_STRBYTES];
     uint8_t salt[crypto_pwhash_SALTBYTES];
+    struct flock file_lock;
+
+    file_lock.l_type = F_WRLCK;
+    file_lock.l_whence = SEEK_SET;
+    file_lock.l_start = 0;
+    file_lock.l_len = 0;
 
     if (hash_password(user->password, hash, salt) != 0)
     {
@@ -37,19 +43,46 @@ int signup(User *user)
     
     if (access("userdata", F_OK) != 0)
     {
-        FILE *userdata = fopen("userdata", "w");
+        int userdata;
         
-        fprintf(userdata, "%s %s\n", user->username, hash);
+        if ((userdata = open("userdata", O_RDWR | O_CREAT, 0644)) == -1)
+        {
+            perror("fcntl");
+            return EXIT_FAILURE;
+        }
+        
+        FILE *u_data = fdopen(userdata, "w");
+        
+        fcntl(userdata, F_SETLKW, &file_lock);
+        fprintf(u_data, "%s %s\n", user->username, hash);
+        file_lock.l_type = F_UNLCK;
+        fcntl(userdata, F_SETLK, &file_lock);
+
+        file_lock.l_type = F_WRLCK;
         puts("\x1b[32mSuccessfully created the userdata file and saved user data.\x1b[0m");
+        fclose(u_data);
+        close(userdata);
         return EXIT_SUCCESS;
     }
 
-    FILE *userdata = fopen("userdata", "a");
+    int userdata;
+    
+    if ((userdata = open("userdata", O_APPEND | O_WRONLY, 0644)) == -1)
+    {
+        perror("fcntl");
+        return EXIT_FAILURE;
+    }
+    
+    FILE *u_data = fdopen(userdata, "a");
 
-    fprintf(userdata, "%s %s\n", user->username, hash);
+    fcntl(userdata, F_SETLKW, &file_lock);
+    fprintf(u_data, "%s %s\n", user->username, hash);
+    file_lock.l_type = F_UNLCK;
+    fcntl(userdata, F_SETLK, &file_lock);
+
     puts("\x1b[32mSuccessfully saved user data.\x1b[0m");
-
-    fclose(userdata);
+    fclose(u_data);
+    close(userdata);
     return EXIT_SUCCESS;
 }
 

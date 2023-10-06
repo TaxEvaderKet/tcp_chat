@@ -15,6 +15,7 @@
 #include <sodium.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 typedef struct 
 {

@@ -28,6 +28,7 @@ typedef struct
     int logged_in;      // 1 if true, 0 if false
 } User;
 
+void nlock_file(int fd, int mode);
 int signup(User *user);
 int login(User *user);
 int logout(User *user);

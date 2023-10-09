@@ -11,18 +11,6 @@
 #include "../user_auth/user_auth.h"
 #include "filter.h"
 
-enum SOCKET_ERRNO
-{
-    GENERIC_ERR = -1,
-    PORT_RANGE_ERR = -2,
-    SOCKET_CREATION_ERR = -3,
-    BIND_ERR = -4,
-    LISTEN_ERR = -5,
-    ACCEPT_ERR = -6,
-    SEND_ERR = -7,
-    RECV_ERR = -8
-};
-
 typedef unsigned short portnum_t;
 
 int init_socket(portnum_t port);

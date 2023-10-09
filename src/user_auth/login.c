@@ -1,4 +1,5 @@
 #include "../../include/user_auth/user_auth.h"
+
 /*
  * Reads from a userdata file and compares data from passed in user struct with stored user data, then sets the logged_in flag to 1 (true).
  * @param pointer to a user struct 

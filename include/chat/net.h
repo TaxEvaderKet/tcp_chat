@@ -1,5 +1,5 @@
-#ifndef NET
-#define NET
+#ifndef NET_H
+#define NET_H
 #define MAX_BACKLOGS 25
 
 #include <netinet/in.h>

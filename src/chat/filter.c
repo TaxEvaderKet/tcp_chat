@@ -1,3 +1,13 @@
+/******************************************************************************************
+ * filter.c: Implementation of the filter.h header.                                       *
+ * This file is part of the chat library.                                                 *
+ * The purpose of this file is to provide a singular, but very important helper function. *
+ * Copyright (C) 2023 TaxEvaderKet                                                        *
+ * License: GNU GPL 3.0                                                                   *
+ * Full notice can be found in src/app.c                                                  *
+ ******************************************************************************************
+*/
+
 #include "../../include/chat/filter.h"
 
 /*

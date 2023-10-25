@@ -1,6 +1,15 @@
+/************************************************************************
+ * net.c: Implementation of the net.h header.                           *
+ * This file is part of the chat library.                               *
+ * The purpose of this file is to simplify anything to do with sockets. *   
+ * Copyright (C) 2023 TaxEvaderKet                                      *
+ * License: GNU GPL 3.0                                                 *
+ * Full notice can be found in src/app.c                                *
+ ************************************************************************
+*/
+
 #include "../../include/chat/net.h"
 
-// TODO: Actually add functionality to them lmao
 
 /*
  * Creates and binds the server socket.
@@ -14,6 +23,7 @@ int init_socket(portnum_t port)
         fprintf(stderr, "\x1b[31mPort number cannot exceed %d or be less than 1000 \x1b[34m(TIP: use port numbers greater than 1024)\n\x1b[0m", USHRT_MAX);
         return -EXIT_FAILURE;
     }
+
     int server_fd;
     struct sockaddr_in server_addr;
     

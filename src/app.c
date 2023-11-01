@@ -19,8 +19,7 @@
  *************************************************************************************************
 */
 
-#include "../include/chat/net.h"
-#include <openssl/rand.h>
+#include "../include/user_auth/user_auth.h"
 #define PORT 1337
 
 // I'll probably use this a few times here and there.
@@ -31,19 +30,15 @@ void remove_newline(char *s)
 
 int main(void)
 {
-    int socket_fd, client_fd;
-    if ((socket_fd = init_socket(PORT)) == -1)
-    {
-        return EXIT_FAILURE;
-    }
-    
-    if ((client_fd = accept_connection(socket_fd)) == -1)
-    {
-        return EXIT_FAILURE;
-    }
+    User usr;
 
-    send(client_fd, (void *)"Hello, World!\n", strlen("Hello, World!\n"), 0);
-    
-    close(socket_fd);
-    return EXIT_SUCCESS;
+    fgets(usr.username, MAX_USERNAME_LENGTH, stdin);
+    read_password(usr.password, "Thingy: ", 0);
+
+    remove_newline(usr.username);
+
+    if (signup(&usr) == EXIT_SUCCESS)
+    {
+        OPENSSL_cleanse(usr.password, MAX_PASSWORD_LENGTH);
+    }
 }

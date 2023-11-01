@@ -13,6 +13,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <openssl/rand.h>
 
 typedef struct 
 {
@@ -47,5 +48,11 @@ int login(User *user);
  * Example of usage (please don't do this at home): logout((User *)&{ "password", "user", 1 });
 */
 int logout(User *user);
+
+/*
+ * This is just for safely reading passwords.
+ * Just a helper function, but I thought this belongs here.
+*/
+void read_password(char password_buffer[MAX_PASSWORD_LENGTH], char *prompt, int flags);
 
 #endif // !USER_AUTH

@@ -236,7 +236,13 @@ int logout(User *user)
         }
     }
     
+    fprintf(stderr, "Could not log out.\n");
     fclose(userdata);
     close(fd_userdata);
     return EXIT_FAILURE;
+}
+
+void read_password(char password_buffer[MAX_PASSWORD_LENGTH], char *prompt, int flags)
+{
+    EVP_read_pw_string(password_buffer, MAX_PASSWORD_LENGTH - 1, prompt, flags);
 }

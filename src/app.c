@@ -1,7 +1,7 @@
 /*************************************************************************************************
  *                                                                                               *
  *   TCP_CHAT: A chatting application which allows users to send messages over a TCP socket.     *
- *   Copyright (C) 2023 TaxEvaderKet                                                             *
+ *   Copyright (C) 2023-2024 TaxEvaderKet                                                        *
  *                                                                                               *
  *   This program is free software: you can redistribute it and/or modify                        *
  *   it under the terms of the GNU General Public License as published by                        *
@@ -20,6 +20,9 @@
 */
 
 #include "../include/user_auth/user_auth.h"
+#include <openssl/rand.h>
+#include <string.h>
+
 #define PORT 1337
 
 // I'll probably use this a few times here and there.
@@ -28,7 +31,7 @@ void remove_newline(char *s)
     s[strcspn(s, "\n")] = '\0';
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
     User usr;
 
@@ -41,4 +44,6 @@ int main(void)
     {
         OPENSSL_cleanse(usr.password, MAX_PASSWORD_LENGTH);
     }
+
+    return EXIT_SUCCESS;
 }

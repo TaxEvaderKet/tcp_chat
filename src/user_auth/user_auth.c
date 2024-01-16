@@ -1,23 +1,37 @@
+// SPDX license identifier: GPL-3.0-or-later
 /***********************************************************************************************************************
- * user_auth.c: Implementation of the user_auth.h header.                                                              *
- * This library serves the purpose of adding login/logout/singnup functionalities commonly associated with accounts.   *
+ * user_auth handles secure password storage, login, and logout using libsodium.                                       *
  * This file is part of TCP_CHAT.                                                                                      *
- * Copyright (C) 2023 TaxEvaderKet                                                                                     *
- * License: GNU GPL 3.0                                                                                                *
+ * Copyright (C) 2023-2024 TaxEvaderKet                                                                                *
  * Full notice can be found in src/app.c                                                                               *
  ***********************************************************************************************************************
 */
 
 #include "../../include/user_auth/user_auth.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sodium.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <openssl/rand.h>
 
 /*
- * Helper function. (Un)locks file descriptor. 
+ * Utility function. (Un)locks file descriptor. 
 */
 void nlock_file(int fd, int mode)
 {
     struct flock file_lock;
-    
-    if (mode > F_UNLCK || mode < F_RDLCK)
+
+    /*
+     * Brief overview of the different locks, just to make things clearer:
+     * F_RDLCK = 0
+     * F_WRLCK = 1
+     * F_UNLCK = 2 
+    */
+
+    if (mode > F_UNLCK || mode < F_RDLCK) 
     {
         fprintf(stderr, "Invalid input.\n");
         exit(EXIT_FAILURE);
@@ -28,15 +42,21 @@ void nlock_file(int fd, int mode)
     file_lock.l_start = 0;
     file_lock.l_len = 0;
 
-    fcntl(fd, F_SETLK, &file_lock);
+    if (fcntl(fd, F_SETLKW, &file_lock) == -1) 
+    {
+        perror("fcntl");
+        exit(EXIT_FAILURE);
+    }
 }
 
 /*
- * Helper function, hashes input password for secure storage.
+ * Utility function, hashes input password for secure storage.
 */
-int hash_password(const char *password, char *hash, uint8_t *salt)
+int hash_password(const char *password,
+                  char *hash,
+                  uint8_t *salt)
 {
-    if (sodium_init() < 0)
+    if (sodium_init() < 0) 
     {
         fprintf(stderr, "\x1b[31mFailed to initialize libsodium\n\x1b[0m");
         return EXIT_FAILURE;
@@ -44,7 +64,9 @@ int hash_password(const char *password, char *hash, uint8_t *salt)
 
     randombytes_buf(salt, crypto_pwhash_SALTBYTES);
 
-    if (crypto_pwhash_str(hash, password, strlen(password), crypto_pwhash_OPSLIMIT_INTERACTIVE, crypto_pwhash_MEMLIMIT_INTERACTIVE) != 0)
+    if (crypto_pwhash_str(hash, password, strlen(password),
+                          crypto_pwhash_OPSLIMIT_INTERACTIVE,
+                          crypto_pwhash_MEMLIMIT_INTERACTIVE) != 0) 
     {
         fprintf(stderr, "\x1b[31mFailed to hash password\n\x1b[0m");
         return EXIT_FAILURE;
@@ -62,20 +84,18 @@ int signup(User *user)
 {
     char hash[crypto_pwhash_STRBYTES];
     uint8_t salt[crypto_pwhash_SALTBYTES];
+    int fd_userdata;
 
     if (hash_password(user->password, hash, salt) != 0)
-    {
-        fprintf(stderr, "\x1b[31mfailed to hash password\n\x1b[0m");
         return EXIT_FAILURE;
-    }
     
-    if (access(USERDATA_FILE_NAME, F_OK) != 0)
-    {
-        int fd_userdata;
+    if (access(USERDATA_FILE_NAME, F_OK) != 0) {
         
-        if ((fd_userdata = open(USERDATA_FILE_NAME, O_RDWR | O_CREAT, FILE_PERMISSIONS)) == -1)
+        if ((fd_userdata = open(USERDATA_FILE_NAME,
+                                O_RDWR | O_CREAT,
+                                FILE_PERMISSIONS)) == -1) 
         {
-            perror("fcntl");
+            perror("open");
             return EXIT_FAILURE;
         }
         
@@ -84,19 +104,18 @@ int signup(User *user)
         
         nlock_file(fd_userdata, F_WRLCK);
         fprintf(userdata, "%s %s %d\n", user->username, hash, user->logged_in);
-        
         nlock_file(fd_userdata, F_UNLCK);
+        
         puts("\x1b[32mSuccessfully created the user data file and saved login data.\x1b[0m");
         fclose(userdata);
-        close(fd_userdata);
         return EXIT_SUCCESS;
     }
-
-    int fd_userdata;
     
-    if ((fd_userdata = open(USERDATA_FILE_NAME, O_APPEND | O_WRONLY, FILE_PERMISSIONS)) == -1)
+    if ((fd_userdata = open(USERDATA_FILE_NAME,
+                            O_APPEND | O_WRONLY,
+                            FILE_PERMISSIONS)) == -1) 
     {
-        perror("fcntl");
+        perror("open");
         return EXIT_FAILURE;
     }
 
@@ -105,107 +124,44 @@ int signup(User *user)
 
     nlock_file(fd_userdata, F_WRLCK);
     fprintf(userdata, "%s %s %d\n", user->username, hash, user->logged_in);
-    
     nlock_file(fd_userdata, F_UNLCK);
+    
     puts("\x1b[32mSuccessfully saved login data.\x1b[0m");
     fclose(userdata);
-    close(fd_userdata);
     return EXIT_SUCCESS;
 }
 
 /*
-* Reads from a userdata file and compares data from passed in user struct with stored user data, then sets the logged_in flag to 1 (true).
-* @param pointer to a user struct 
+* Reads from a userdata file and compares data from passed in user struct with stored user data, then sets the logged_in flag to action.
+* @param [user] pointer to a user struct 
+* @param [action] whether to log specified user in (1) or out (0)
 * @returns 0 on success, 1 on error
 */
-int login(User *user)
-{
-   int fd_userdata;
-
-   if ((fd_userdata = open(USERDATA_FILE_NAME, O_RDWR, FILE_PERMISSIONS)) == -1)
-   {
-       perror("fcntl");
-       return EXIT_FAILURE;
-   }
-
-   FILE *userdata = fdopen(fd_userdata, "r+");
-
-   if (userdata == NULL)
-   {
-       perror("fdopen");
-       return EXIT_FAILURE;
-   }
-   
-   char line[MAX_USERNAME_LENGTH + crypto_pwhash_STRBYTES + 1];
-   
-   while (fgets(line, sizeof(line), userdata) != NULL)
-   {
-       char username[MAX_USERNAME_LENGTH];
-       char stored_hash[crypto_pwhash_STRBYTES];
-       int logged_in;
-
-       if (sscanf(line, "%s %s %d\n", username, stored_hash, &logged_in) != 3)
-       {
-           continue;
-       }
-
-       if (strncmp(username, user->username, MAX_USERNAME_LENGTH) != 0)
-       {
-           continue;
-       }
-
-       if (logged_in == 1)
-       {
-           puts("You're already logged in.");
-           fclose(userdata);
-           close(fd_userdata);
-           return EXIT_SUCCESS;
-       }
-
-       if (crypto_pwhash_str_verify(stored_hash, user->password, strlen(user->password)) == 0)
-       {
-           user->logged_in = 1;
-           nlock_file(fd_userdata, F_RDLCK);
-           fseek(userdata, -strlen(line), SEEK_CUR);
-           fprintf(userdata, "%s %s %d\n", user->username, stored_hash, user->logged_in);
-           
-           nlock_file(fd_userdata, F_UNLCK);
-           fclose(userdata);
-           close(fd_userdata);
-           puts("\x1b[32mLogin successful.\x1b[0m");
-           return EXIT_SUCCESS;
-       }
-   }
-   
-   fprintf(stderr, "Incorrect username or password.\n");
-   fclose(userdata);
-   close(fd_userdata);
-   return EXIT_FAILURE;
-}
-
-/*
- * Sets the logged_in flag to 0. Originally sent SIGTERM to the process, but oh well.
- * @param [user] The user to log out.
- * @returns 0 on success, 1 on error.
-*/
-int logout(User *user)
+int logn(User *user, int action)
 {
     int fd_userdata;
 
-    if ((fd_userdata = open(USERDATA_FILE_NAME, O_RDWR, FILE_PERMISSIONS)) == -1)
+    if (action != LOGIN && action != LOGOUT) 
     {
-        perror("fcntl");
+        fprintf(stderr, "Incorrect action specified.\n");
+        return EXIT_FAILURE;
+    }
+
+    if ((fd_userdata = open(USERDATA_FILE_NAME,
+                            O_RDWR, FILE_PERMISSIONS)) == -1) 
+    {
+        perror("open");
         return EXIT_FAILURE;
     }
 
     FILE *userdata = fdopen(fd_userdata, "r+");
 
-    if (userdata == NULL)
+    if (userdata == NULL) 
     {
         perror("fdopen");
         return EXIT_FAILURE;
     }
-
+   
     char line[MAX_USERNAME_LENGTH + crypto_pwhash_STRBYTES + 1];
 
     while (fgets(line, sizeof(line), userdata) != NULL)
@@ -214,35 +170,57 @@ int logout(User *user)
         char stored_hash[crypto_pwhash_STRBYTES];
         int logged_in;
 
-        if (sscanf(line, "%s %s %d\n", username, stored_hash, &logged_in) != 3)
+        if (sscanf(line, "%s %s %d\n", username,
+                   stored_hash, &logged_in) != 3) 
         {
             continue;
         }
 
-        if (strncmp(user->username, username, MAX_USERNAME_LENGTH) == 0)
+        if (strncmp(username, user->username, 
+                    MAX_USERNAME_LENGTH) != 0) 
         {
-            user->logged_in = 0;
+            continue;
+        }
 
+        if (logged_in == 1 && action == LOGIN) 
+        {
+            puts("You're already logged in.");
+            fclose(userdata);
+            return EXIT_FAILURE;
+        } 
+        else 
+        {
+            continue;
+        }
+
+        if (crypto_pwhash_str_verify(stored_hash, user->password,
+                                     strlen(user->password)) == 0) 
+        {
+            char status[sizeof("Logout")];
+            action == LOGOUT
+                ? strncpy(status, "Logout", strlen("Logout"))
+                : strncpy(status, "Login", strlen("Login"));
+
+            user->logged_in = action;
             nlock_file(fd_userdata, F_RDLCK);
             fseek(userdata, -strlen(line), SEEK_CUR);
             fprintf(userdata, "%s %s %d\n", user->username, stored_hash, user->logged_in);
-            
             nlock_file(fd_userdata, F_UNLCK);
-            fclose(userdata);
-            close(fd_userdata);
-            puts("\x1b[32mLogout successful.\x1b[0m");
             
+            printf("\x1b[32m%s successful.\n\x1b[0m", status);
+            fclose(userdata);
             return EXIT_SUCCESS;
         }
     }
-    
-    fprintf(stderr, "Could not log out.\n");
+   
+    fprintf(stderr, "Incorrect username or password.\n");
     fclose(userdata);
-    close(fd_userdata);
     return EXIT_FAILURE;
 }
 
-void read_password(char password_buffer[MAX_PASSWORD_LENGTH], char *prompt, int flags)
+void read_password(char password_buffer[MAX_PASSWORD_LENGTH],
+                   char *prompt,
+                   int flags)
 {
     EVP_read_pw_string(password_buffer, MAX_PASSWORD_LENGTH - 1, prompt, flags);
 }

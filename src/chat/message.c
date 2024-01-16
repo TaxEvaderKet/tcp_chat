@@ -1,32 +1,92 @@
-/*********************************************************************************************************
- * message.c: Implementation of the message.h header.                                                    *
- * This file is part of the chat library.                                                                *
- * The purpose of this file is to simplify the process of sending/receiving messages in a custom format. *
- * Copyright (C) 2023 TaxEvaderKet                                                                       *
- * License: GNU GPL 3.0                                                                                  *
- * Full notice can be found in src/app.c                                                                 *
- *********************************************************************************************************
+// SPDX license identifier: GPL-3.0-or-later
+/****************************************************************************************************************************
+ * This is a utility for sending and receiving message contents in JSON. Formatting occurs seperately. Up to the developer. *
+ * Copyright (C) 2023-2024 TaxEvaderKet                                                                                     *
+ * Full notice can be found in src/app.c                                                                                    *
+ ****************************************************************************************************************************
 */
 
 #include "../../include/chat/message.h"
+#include <stdlib.h>
+#include <time.h>
+#include <sys/socket.h>
+#include <string.h>
+#include <stdio.h>
 
-// This is unfinished.
+// 4 = hours and minutes, 61 = JSON string chars
+// username accounted for in MAX_MESSAGE_LENGTH, see message.h for details.
+static const size_t JSON_STRING_LENGTH = MAX_MESSAGE_LENGTH + 4 + 61;
 
-int send_message(User *usr, char *msg_buffer, size_t msg_buffer_len, int fd)
+/*
+ * Utility function. Takes in message components and puts them into a JSON string.
+ * Time is always displayed in 24-hour format. So, to all 12-hour clock users: cope.
+*/
+void format_msg_to_json(char *msg_content,
+                        char *username,
+                        int hh, int mm,
+                        char *str, size_t bufsize)
 {
-    char full_msg_buffer[MAX_MESSAGE_LENGTH];
+    if (bufsize < JSON_STRING_LENGTH)
+    {
+        fprintf(stderr, "\x1b[33mWarning: buffer smaller than recommended size of %zu\n\x1b[0m", JSON_STRING_LENGTH);
+    }
+
+    char json_string[JSON_STRING_LENGTH];
+
+    snprintf(json_string, sizeof(json_string),
+             "{\
+                \"msg_content\": \"%s\",\
+                \"sender\": \"%s\",\
+                \"hour\": \"%02d\",\
+                \"minute\": \"%02d\"\
+            }",
+            msg_content, username, hh, mm);
+
+    strncpy(str, json_string, JSON_STRING_LENGTH);
+}
+
+/*
+ * Sends the components of a message in JSON format to specified file descriptor.
+ * @param [usr] Required to display the sender's username in message.
+ * Rest: self-explanatory. 
+ * Returns status 1 (failure) or 0 (success).
+*/
+int send_message(User *usr, char *msg_content, int socket_fd)
+{
     time_t current_time = time(NULL);
     struct tm *time_info = localtime(&current_time);
     int hours = time_info->tm_hour;
     int minutes = time_info->tm_min;
+    char stringified_components[JSON_STRING_LENGTH];
+    
+    format_msg_to_json(msg_content, usr->username,
+                       hours, minutes,
+                       stringified_components,
+                       sizeof(stringified_components));
 
-    snprintf(full_msg_buffer, MAX_MESSAGE_LENGTH, "%02d:%02d | %s\n%s", hours, minutes, usr->username, msg_buffer);
+    if (send(socket_fd, stringified_components,
+             strlen(stringified_components), 0) == -1)
+    {
+        perror("send");
+        return EXIT_FAILURE;
+    }
 
-    send(fd, (void *)full_msg_buffer, sizeof(full_msg_buffer), 0);
     return EXIT_SUCCESS;
 }
 
-int receive_message(char *msg_buffer, size_t msg_buffer_len, int fd)
+/*
+ * Simply a wrapper for recv. Yup. All there is to it.
+*/
+int receive_message(char *components_buffer, int socket_fd)
 {
+    ssize_t bytes_received = recv(socket_fd,
+                                  components_buffer,
+                                  sizeof(components_buffer), 0);
+
+    if (bytes_received < 0) {
+        perror("recv");
+        return EXIT_FAILURE;
+    }
+
     return EXIT_SUCCESS;
 }

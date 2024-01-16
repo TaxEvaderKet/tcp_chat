@@ -19,6 +19,7 @@ add_executable(app ${APP_SOURCES})
 target_link_libraries(app userauth chat)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    target_compile_options(app PUBLIC -Wall -Wpedantic)
     add_custom_command(
         TARGET app
         POST_BUILD

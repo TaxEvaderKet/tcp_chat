@@ -23,8 +23,7 @@ Contribute if you want, don't if you don't.
 - RHEL and Fedora-based
     - `sudo dnf install git gcc make cmake libsodium-devel openssl-devel`
 - Arch Linux
-    - `sudo pacman -Syu`
-    - `sudo pacman -S git gcc make cmake libsodium openssl`
+    - `sudo pacman -Syu git gcc make cmake libsodium openssl`
 - Windows Subsystem for Linux (WSL):
     - Follow the Linux installation instructions relevant to your WSL distribution.
 

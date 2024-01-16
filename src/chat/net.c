@@ -14,14 +14,18 @@
 /*
  * Creates and binds the server socket.
  * @param [port] unsigned short. Will be the port the server listens to.
- * @returns the server file descriptor, or -1 on error.
+ * @returns the server file descriptor, or 1 on error.
 */
 int init_socket(portnum_t port)
 {
-    if (port > USHRT_MAX || port < 1000)
+    if (port > USHRT_MAX || port < 1024)
     {
-        fprintf(stderr, "\x1b[31mPort number cannot exceed %d or be less than 1000 \x1b[34m(TIP: use port numbers greater than 1024)\n\x1b[0m", USHRT_MAX);
-        return -EXIT_FAILURE;
+        fprintf(stderr,
+                "\x1b[31mPort number cannot exceed %d\
+                or be less than 1000 \x1b[34m(TIP: use\
+                port numbers greater than 1024)\n\x1b[0m", USHRT_MAX);
+        
+        return EXIT_FAILURE;
     }
 
     int server_fd;
@@ -33,15 +37,17 @@ int init_socket(portnum_t port)
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
     {
         perror("socket");
-        return -EXIT_FAILURE;
+        return EXIT_FAILURE;
     }
 
     server_addr.sin_addr.s_addr = INADDR_ANY;
 
-    if (bind(server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1)
+    if (bind(server_fd, 
+             (struct sockaddr *)&server_addr, 
+             sizeof(server_addr)) == -1)
     {
         perror("bind");
-        return -EXIT_FAILURE;
+        return EXIT_FAILURE;
     }
 
     return server_fd;
@@ -50,7 +56,7 @@ int init_socket(portnum_t port)
 /*
  * Listens for connections and accepts.
  * @param [server_fd] the server socket's file descriptor.
- * @returns client file descriptor, or -1 on error. 
+ * @returns client file descriptor, or 1 on error. 
 */
 int accept_connection(int server_fd)
 {
@@ -61,13 +67,15 @@ int accept_connection(int server_fd)
     if (listen(server_fd, MAX_BACKLOGS) == -1)
     {
         perror("listen");
-        return -EXIT_FAILURE;
+        return EXIT_FAILURE;
     }
 
-    if ((client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &client_addrlen)) == -1)
+    if ((client_fd = accept(server_fd,
+                            (struct sockaddr *)&client_addr, 
+                            &client_addrlen)) == -1)
     {
         perror("accept");
-        return -EXIT_FAILURE;
+        return EXIT_FAILURE;
     }
     
     return client_fd;

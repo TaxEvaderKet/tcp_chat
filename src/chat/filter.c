@@ -1,11 +1,9 @@
-/******************************************************************************************
- * filter.c: Implementation of the filter.h header.                                       *
- * This file is part of the chat library.                                                 *
- * The purpose of this file is to provide a singular, but very important helper function. *
- * Copyright (C) 2023 TaxEvaderKet                                                        *
- * License: GNU GPL 3.0                                                                   *
- * Full notice can be found in src/app.c                                                  *
- ******************************************************************************************
+// SPDX license identifier: GPL-3.0-or-later
+/******************************************************************************************************************
+ * This file only provides one function, which will serve the purpose of input sanitization. (among other things) *
+ * Copyright (C) 2023 TaxEvaderKet                                                                                *
+ * Full notice can be found in src/app.c                                                                          *
+ ******************************************************************************************************************
 */
 
 #include "../../include/chat/filter.h"
@@ -16,15 +14,25 @@
  * @param [search] The substring that is to be replaced.
  * @param [replace] The substring that [search] is replaced with, if found.
 */
-void strreplace(char *str, char *search, char *replace)
+void strreplace(char *str, const char *search, const char *replace)
 {
-    if (strlen(search) > strlen(str) || strlen(replace) > strlen(str))
-    {
-        puts("\x1b[31mWhat the hell are you doing?\x1b[0m");
-        exit(1);
+    size_t search_len = strlen(search);
+    size_t replace_len = strlen(replace);
+
+    if (search_len > strlen(str) || replace_len > strlen(str)) {
+        fprintf(stderr, "\x1b[31mSearch or replace string larger than input string.\n\x1b[0m");
+        exit(EXIT_FAILURE);
+    }
+    
+    size_t max_increase = (replace_len > search_len) ? (replace_len - search_len) : 0;    
+    
+    char buffer[strnlen(str, MAX_MESSAGE_LENGTH) + max_increase]; 
+    
+    if (sizeof(buffer) < strlen(str)) {
+        fprintf(stderr, "\x1b[31mSize of input string exceeds the maximum of the buffer.\n\x1b[0m");
+        exit(EXIT_FAILURE);
     }
 
-    char buffer[strnlen(str, MAX_MESSAGE_LENGTH)];
     char *p = str;
     
     while ((p = strstr(p, search)))
@@ -33,8 +41,7 @@ void strreplace(char *str, char *search, char *replace)
         buffer[p - str] = '\0';
         strncat(buffer, replace, MAX_REPLACE_SIZE - 1);
         strncat(buffer, p + strlen(search), MAX_SEARCH_SIZE - 1);
-        strncpy(str, buffer, MAX_MESSAGE_LENGTH - 1);
+        strncpy(str, buffer, strlen(str));
         p++;
     }
 }
-

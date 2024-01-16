@@ -6,14 +6,6 @@
 #define FILE_PERMISSIONS 0644 /* read, write, but not execute */
 #define USERDATA_FILE_NAME "userdata"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sodium.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <openssl/rand.h>
 
 typedef struct 
 {
@@ -23,31 +15,30 @@ typedef struct
     int logged_in;
 } User;
 
+enum actions {
+    LOGOUT = 0,
+    LOGIN = 1
+};
+
 /*
  * Purpose: Putting different kinds of locks on a file descriptor.
  * Example of usage: nlock_file(fd_to_some_file, F_WRLCK); 
- * For the different types of locks, see fcntl.
+ * Possible values for mode: F_RDLCK (shared lock), F_WRLCK (exclusive lock), and F_UNLCK (remove lock)
 */
 void nlock_file(int fd, int mode);
 
 /*
  * Purpose: Writes user login data to a file. File is created if it doesn't exist.
- * Example of usage (not recommended): signup((User *)&{ "password", "user", 0 });
- * Disclaimer: The examples below (and the one above) are for demonstration purposes only.
+ * Example of usage: signup(&example_usr);
 */
 int signup(User *user);
 
 /*
- * Purpose: Reading from user data file and setting the logged_in flag to 1.
- * Example of usage (also not recommended): login((User *)&{ "password123", "user123", 0 });
+ * Purpose: Reading from user data file and setting the logged_in flag to action.
+ * Example of usage: logn(&example_usr, LOGIN);
 */
-int login(User *user);
+int logn(User *user, int action);
 
-/*
- * Purpose: Similar to `login`, except it sets the logged_in flag to 0.
- * Example of usage (please don't do this at home): logout((User *)&{ "password", "user", 1 });
-*/
-int logout(User *user);
 
 /*
  * This is just for safely reading passwords.

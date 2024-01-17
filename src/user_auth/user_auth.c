@@ -106,7 +106,8 @@ int signup(User *user)
         fprintf(userdata, "%s %s %d\n", user->username, hash, user->logged_in);
         nlock_file(fd_userdata, F_UNLCK);
         
-        puts("\x1b[32mSuccessfully created the user data file and saved login data.\x1b[0m");
+        fprintf(stderr, "\x1b[32mSuccessfully created the user data file and saved login data.\n\x1b[0m");
+        OPENSSL_cleanse(user->password, MAX_PASSWORD_LENGTH);
         fclose(userdata);
         return EXIT_SUCCESS;
     }
@@ -126,7 +127,8 @@ int signup(User *user)
     fprintf(userdata, "%s %s %d\n", user->username, hash, user->logged_in);
     nlock_file(fd_userdata, F_UNLCK);
     
-    puts("\x1b[32mSuccessfully saved login data.\x1b[0m");
+    fprintf(stderr, "\x1b[32mSuccessfully saved login data.\n\x1b[0m");
+    OPENSSL_cleanse(user->password, MAX_PASSWORD_LENGTH);
     fclose(userdata);
     return EXIT_SUCCESS;
 }
@@ -188,10 +190,6 @@ int logn(User *user, int action)
             fclose(userdata);
             return EXIT_FAILURE;
         } 
-        else 
-        {
-            continue;
-        }
 
         if (crypto_pwhash_str_verify(stored_hash, user->password,
                                      strlen(user->password)) == 0) 
@@ -204,23 +202,29 @@ int logn(User *user, int action)
             user->logged_in = action;
             nlock_file(fd_userdata, F_RDLCK);
             fseek(userdata, -strlen(line), SEEK_CUR);
-            fprintf(userdata, "%s %s %d\n", user->username, stored_hash, user->logged_in);
+            fprintf(userdata, "%s %s %d\n", user->username,
+                                            stored_hash, 
+                                            user->logged_in);
             nlock_file(fd_userdata, F_UNLCK);
             
-            printf("\x1b[32m%s successful.\n\x1b[0m", status);
+            fprintf(stderr, "\x1b[32m%s successful.\n\x1b[0m", status);
+            OPENSSL_cleanse(user->password, MAX_PASSWORD_LENGTH);
             fclose(userdata);
             return EXIT_SUCCESS;
         }
     }
    
     fprintf(stderr, "Incorrect username or password.\n");
+    OPENSSL_cleanse(user->password, MAX_PASSWORD_LENGTH);
     fclose(userdata);
     return EXIT_FAILURE;
 }
 
-void read_password(char password_buffer[MAX_PASSWORD_LENGTH],
+void read_password(char *password_buffer,
                    char *prompt,
                    int flags)
 {
-    EVP_read_pw_string(password_buffer, MAX_PASSWORD_LENGTH - 1, prompt, flags);
+    EVP_read_pw_string(password_buffer, 
+                       MAX_PASSWORD_LENGTH - 1, 
+                       prompt, flags);
 }

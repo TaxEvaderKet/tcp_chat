@@ -42,7 +42,7 @@ int logn(User *user, int action);
 
 /*
  * This is just for safely reading passwords.
- * Just a helper function, but I thought this belongs here.
+ * Just a wrapper, but I thought this belongs here.
 */
 void read_password(char password_buffer[MAX_PASSWORD_LENGTH], char *prompt, int flags);
 

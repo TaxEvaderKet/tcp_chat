@@ -7,15 +7,17 @@
 */
 
 #include "../../include/chat/message.h"
-#include <stdlib.h>
 #include <time.h>
 #include <sys/socket.h>
 #include <string.h>
 #include <stdio.h>
 
+// Adjust this value according to your needs.
+const int FMT_CHARS = 9;
+
 // 4 = hours and minutes, 61 = JSON string chars
 // username accounted for in MAX_MESSAGE_LENGTH, see message.h for details.
-static const size_t JSON_STRING_LENGTH = MAX_MESSAGE_LENGTH + 4 + 61;
+const size_t JSON_STRING_LENGTH = MAX_MESSAGE_LENGTH + 4 + 61;
 
 /*
  * Utility function. Takes in message components and puts them into a JSON string.
@@ -79,6 +81,9 @@ int send_message(User *usr, char *msg_content, int socket_fd)
 */
 int receive_message(char *components_buffer, int socket_fd)
 {
+    if (sizeof(components_buffer) == sizeof(char*))
+        fprintf(stderr, "\x1b[33mWarning: Unallocated char buffer passed in\n\x1b[0m");
+
     ssize_t bytes_received = recv(socket_fd,
                                   components_buffer,
                                   sizeof(components_buffer), 0);

@@ -1,11 +1,13 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
-// Adjust this value according to your needs.
-#define FMT_CHARS 9 
 #define MAX_DECORATIONS_LENGTH (MAX_USERNAME_LENGTH + FMT_CHARS)
 #define MAX_MESSAGE_LENGTH (MAX_DECORATIONS_LENGTH + 2048)
 
 #include "../user_auth/user_auth.h"
+#include <stdlib.h>
+
+extern const size_t JSON_STRING_LENGTH;
+extern const int FMT_CHARS;
 
 int send_message(User *usr, char msg_buffer[MAX_MESSAGE_LENGTH], int fd);
 int receive_message(char *msg_buffer, int fd);

@@ -12,8 +12,9 @@
 #include <string.h>
 #include <stdio.h>
 
-// Adjust this value according to your needs.
+// Adjust these values according to your needs.
 const int FMT_CHARS = 9;
+const int MAX_CONTENT_LENGTH = 2048;
 
 // 4 = hours and minutes, 61 = JSON string chars
 // username accounted for in MAX_MESSAGE_LENGTH, see message.h for details.

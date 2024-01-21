@@ -8,6 +8,7 @@
 */
 
 #include "../../include/user_auth/user_auth.h"
+#include <sodium/crypto_pwhash.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,6 +17,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <openssl/rand.h>
+
+static const int EINUSE = 2; 
 
 /*
  * Utility function. (Un)locks file descriptor. 
@@ -78,7 +81,7 @@ int hash_password(const char *password,
 /*
  * Takes in user data, hashes the password, and saves username and argon2id digest to a file
  * @param pointer to a user struct
- * @returns 1 on error, 0 on success
+ * @returns 1 or EINUSE on error, 0 on success
 */
 int signup(User *user)
 {
@@ -102,8 +105,8 @@ int signup(User *user)
         FILE *userdata = fdopen(fd_userdata, "w");
         user->logged_in = 0;
         
-        nlock_file(fd_userdata, F_WRLCK);
-        fprintf(userdata, "%s %s %d\n", user->username, hash, user->logged_in);
+        nlock_file(fd_userdata, F_RDLCK);
+        fprintf(userdata, "%s %s %d\n", user->username,hash, user->logged_in);
         nlock_file(fd_userdata, F_UNLCK);
         
         fprintf(stderr, "\x1b[32mSuccessfully created the user data file and saved login data.\n\x1b[0m");
@@ -113,17 +116,34 @@ int signup(User *user)
     }
     
     if ((fd_userdata = open(USERDATA_FILE_NAME,
-                            O_APPEND | O_WRONLY,
+                            O_APPEND | O_RDWR,
                             FILE_PERMISSIONS)) == -1) 
     {
         perror("open");
         return EXIT_FAILURE;
     }
 
-    FILE *userdata = fdopen(fd_userdata, "a");
+    FILE *userdata = fdopen(fd_userdata, "a+");
     user->logged_in = 0;
+    
+    // 4 is equal to all whitespace and the newline at the end.
+    char linebuf[MAX_USERNAME_LENGTH + crypto_pwhash_STRBYTES + 4];
 
-    nlock_file(fd_userdata, F_WRLCK);
+    while (fgets(linebuf, sizeof(linebuf), userdata) != NULL)
+    {
+        char username[MAX_USERNAME_LENGTH];
+        char hash[crypto_pwhash_STRBYTES];
+        int logged_in;
+
+        if (sscanf(linebuf, "%s %s %d", username, hash, &logged_in) == 3 
+            && strncmp(username, user->username, MAX_USERNAME_LENGTH) == 0)
+        {
+            fprintf(stderr, "\x1b[31m\"%s\" is taken.\n\x1b[0m", user->username);
+            return EINUSE;
+        }
+    }
+
+    nlock_file(fd_userdata, F_RDLCK);
     fprintf(userdata, "%s %s %d\n", user->username, hash, user->logged_in);
     nlock_file(fd_userdata, F_UNLCK);
     
@@ -164,7 +184,7 @@ int logn(User *user, int action)
         return EXIT_FAILURE;
     }
    
-    char line[MAX_USERNAME_LENGTH + crypto_pwhash_STRBYTES + 1];
+    char line[MAX_USERNAME_LENGTH + crypto_pwhash_STRBYTES + 4];
 
     while (fgets(line, sizeof(line), userdata) != NULL)
     {
@@ -200,7 +220,7 @@ int logn(User *user, int action)
                 : strncpy(status, "Login", strlen("Login"));
 
             user->logged_in = action;
-            nlock_file(fd_userdata, F_RDLCK);
+            nlock_file(fd_userdata, F_WRLCK);
             fseek(userdata, -strlen(line), SEEK_CUR);
             fprintf(userdata, "%s %s %d\n", user->username,
                                             stored_hash, 

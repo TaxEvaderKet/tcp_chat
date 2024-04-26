@@ -1,15 +1,20 @@
-/************************************************************************
- * net.c: Implementation of the net.h header.                           *
- * This file is part of the chat library.                               *
- * The purpose of this file is to simplify anything to do with sockets. *   
- * Copyright (C) 2023 TaxEvaderKet                                      *
- * License: GNU GPL 3.0                                                 *
- * Full notice can be found in src/app.c                                *
- ************************************************************************
+// License: GPL 3.0 or later 
+/*********************************************
+ * net.c: Simplifying socket stuff.          *   
+ * Copyright (C) 2023-2024 TaxEvaderKet      *
+ * Full notice can be found in src/app.c     *
+ *********************************************
 */
 
 #include "../../include/chat/net.h"
-
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <netinet/ip.h>
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 /*
  * Creates and binds the server socket.
@@ -22,8 +27,7 @@ int init_socket(portnum_t port)
     {
         fprintf(stderr,
                 "\x1b[31mPort number cannot exceed %d\
-                or be less than 1000 \x1b[34m(TIP: use\
-                port numbers greater than 1024)\n\x1b[0m", USHRT_MAX);
+                or be less than 1024\n\x1b[0m", USHRT_MAX);
         
         return EXIT_FAILURE;
     }

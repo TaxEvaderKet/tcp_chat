@@ -1,9 +1,9 @@
-// SPDX license identifier: GPL-3.0-or-later
-/****************************************************************************************************************************
- * This is a utility for sending and receiving message contents in JSON. Formatting occurs seperately. Up to the developer. *
- * Copyright (C) 2023-2024 TaxEvaderKet                                                                                     *
- * Full notice can be found in src/app.c                                                                                    *
- ****************************************************************************************************************************
+// License: GPL 3.0 or later
+/********************************************************************************************************
+ * This is a utility for sending and receiving message contents in JSON. Formatting occurs separately.  *
+ * Copyright (C) 2023-2024 TaxEvaderKet                                                                 *
+ * Full notice can be found in src/app.c                                                                *
+ ********************************************************************************************************
 */
 
 #include "../../include/chat/message.h"
@@ -12,7 +12,8 @@
 #include <string.h>
 #include <stdio.h>
 
-// Adjust these values according to your needs.
+// Adjust these values according to your needs; they're meant to be modified.
+// These are just defaults.
 const int FMT_CHARS = 9;
 const int MAX_CONTENT_LENGTH = 2048;
 
@@ -22,7 +23,7 @@ const size_t JSON_STRING_LENGTH = MAX_MESSAGE_LENGTH + 4 + 61;
 
 /*
  * Utility function. Takes in message components and puts them into a JSON string.
- * Time is always displayed in 24-hour format. So, to all 12-hour clock users: cope.
+ * Time is always displayed in 24-hour format. 
 */
 void format_msg_to_json(char *msg_content,
                         char *username,
@@ -31,7 +32,8 @@ void format_msg_to_json(char *msg_content,
 {
     if (bufsize < JSON_STRING_LENGTH)
     {
-        fprintf(stderr, "\x1b[33mWarning: buffer smaller than recommended size of %zu\n\x1b[0m", JSON_STRING_LENGTH);
+        fprintf(stderr, "\x1b[33mWarning: buffer smaller than recommended size of %zu\n\x1b[0m",
+                JSON_STRING_LENGTH);
     }
 
     char json_string[JSON_STRING_LENGTH];
@@ -50,8 +52,7 @@ void format_msg_to_json(char *msg_content,
 
 /*
  * Sends the components of a message in JSON format to specified file descriptor.
- * @param [usr] Required to display the sender's username in message.
- * Rest: self-explanatory. 
+ * @param [usr] Required to display the sender's username in message. 
  * Returns status 1 (failure) or 0 (success).
 */
 int send_message(User *usr, char *msg_content, int socket_fd)

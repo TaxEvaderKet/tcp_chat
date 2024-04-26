@@ -1,4 +1,4 @@
-// SPDX license identifier: GPL-3.0-or-later
+// License: GNU GPL 3.0 or later
 /******************************************************************************************************************
  * This file only provides one function, which will serve the purpose of input sanitization. (among other things) *
  * Copyright (C) 2023 TaxEvaderKet                                                                                *

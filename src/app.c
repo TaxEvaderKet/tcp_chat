@@ -35,12 +35,27 @@ int main(int argc, char *argv[])
 {
     User usr;
 
+    printf("Enter username or something: ");
     fgets(usr.username, MAX_USERNAME_LENGTH, stdin);
     read_password(usr.password, "Thingy: ", 0);
 
     remove_newline(usr.username);
 
     if (signup(&usr) == EXIT_SUCCESS)
+    {
+        OPENSSL_cleanse(usr.password, MAX_PASSWORD_LENGTH);
+    }
+
+
+    User new_user;
+
+    printf("Enter username again: ");
+    fgets(new_user.username, MAX_USERNAME_LENGTH, stdin);
+    read_password(new_user.password, "Password: ", 0);
+
+    remove_newline(new_user.username);
+
+    if (logn(&new_user, LOGIN) == EXIT_SUCCESS) 
     {
         OPENSSL_cleanse(usr.password, MAX_PASSWORD_LENGTH);
     }

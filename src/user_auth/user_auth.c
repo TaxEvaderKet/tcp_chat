@@ -1,4 +1,4 @@
-// SPDX license identifier: GPL-3.0-or-later
+// License: GPL 3.0 or later
 /***********************************************************************************************************************
  * user_auth handles secure password storage, login, and logout using libsodium.                                       *
  * This file is part of TCP_CHAT.                                                                                      *
@@ -18,7 +18,9 @@
 #include <fcntl.h>
 #include <openssl/rand.h>
 
-static const int EINUSE = 2; 
+// As I've said before, adjust the file name as needed.
+const int EINUSE = 2; 
+const char* USERDATA_FILE_NAME = "userdata"; 
 
 /*
  * Utility function. (Un)locks file descriptor. 
@@ -80,7 +82,6 @@ int hash_password(const char *password,
 
 /*
  * Takes in user data, hashes the password, and saves username and argon2id digest to a file
- * @param pointer to a user struct
  * @returns 1 or EINUSE on error, 0 on success
 */
 int signup(User *user)
@@ -105,8 +106,8 @@ int signup(User *user)
         FILE *userdata = fdopen(fd_userdata, "w");
         user->logged_in = 0;
         
-        nlock_file(fd_userdata, F_RDLCK);
-        fprintf(userdata, "%s %s %d\n", user->username,hash, user->logged_in);
+        nlock_file(fd_userdata, F_WRLCK);
+        fprintf(userdata, "%s %s %d\n", user->username, hash, user->logged_in);
         nlock_file(fd_userdata, F_UNLCK);
         
         fprintf(stderr, "\x1b[32mSuccessfully created the user data file and saved login data.\n\x1b[0m");
@@ -143,7 +144,7 @@ int signup(User *user)
         }
     }
 
-    nlock_file(fd_userdata, F_RDLCK);
+    nlock_file(fd_userdata, F_WRLCK);
     fprintf(userdata, "%s %s %d\n", user->username, hash, user->logged_in);
     nlock_file(fd_userdata, F_UNLCK);
     
@@ -155,7 +156,6 @@ int signup(User *user)
 
 /*
 * Reads from a userdata file and compares data from passed in user struct with stored user data, then sets the logged_in flag to action.
-* @param [user] pointer to a user struct 
 * @param [action] whether to log specified user in (1) or out (0)
 * @returns 0 on success, 1 on error
 */

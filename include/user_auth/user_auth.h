@@ -4,8 +4,6 @@
 #define MAX_USERNAME_LENGTH 32
 #define SALT_LENGTH 16
 #define FILE_PERMISSIONS 0644 /* read, write, but not execute */
-#define USERDATA_FILE_NAME "userdata"
-
 
 typedef struct 
 {
@@ -14,6 +12,9 @@ typedef struct
     char username[MAX_USERNAME_LENGTH];
     int logged_in;
 } User;
+
+extern const int EINUSE;
+extern const char *USERDATA_FILE_NAME;
 
 enum actions {
     LOGOUT = 0,

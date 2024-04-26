@@ -10,7 +10,7 @@ extern const size_t JSON_STRING_LENGTH;
 extern const int FMT_CHARS;
 extern const int MAX_CONTENT_LENGTH;
 
-int send_message(User *usr, char msg_buffer[MAX_MESSAGE_LENGTH], int fd);
+int send_message(User *usr, char *msg_content, int fd);
 int receive_message(char *msg_buffer, int fd);
 
 #endif // !MESSAGE_H

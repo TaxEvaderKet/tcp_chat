@@ -3,5 +3,6 @@ CMake*
 !CMakeLists.txt
 *.cmake
 Makefile
+Tests
 releases
 out

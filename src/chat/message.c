@@ -14,8 +14,8 @@
 
 // Adjust these values according to your needs; they're meant to be modified.
 // These are just defaults.
-const int FMT_CHARS = 9;
-const int MAX_CONTENT_LENGTH = 2048;
+const size_t FMT_CHARS = 9;
+const size_t MAX_CONTENT_LENGTH = 2048;
 
 // 4 = hours and minutes, 61 = JSON string chars
 // username accounted for in MAX_MESSAGE_LENGTH, see message.h for details.
@@ -23,7 +23,7 @@ const size_t JSON_STRING_LENGTH = MAX_MESSAGE_LENGTH + 4 + 61;
 
 /*
  * Utility function. Takes in message components and puts them into a JSON string.
- * Time is always displayed in 24-hour format. 
+ * Time is always displayed in 24-hour format. So, to all 12-hour clock users: cope.
 */
 void format_msg_to_json(char *msg_content,
                         char *username,
@@ -32,13 +32,14 @@ void format_msg_to_json(char *msg_content,
 {
     if (bufsize < JSON_STRING_LENGTH)
     {
-        fprintf(stderr, "\x1b[33mWarning: buffer smaller than recommended size of %zu\n\x1b[0m",
+        fprintf(stderr, "\x1b[33mWarning: buffer smaller than\
+                        recommended size of %zu\n\x1b[0m",
                 JSON_STRING_LENGTH);
     }
 
     char json_string[JSON_STRING_LENGTH];
 
-    snprintf(json_string, sizeof(json_string),
+    snprintf(json_string, sizeof json_string,
              "{\
                 \"msg_content\": \"%s\",\
                 \"sender\": \"%s\",\
@@ -52,7 +53,8 @@ void format_msg_to_json(char *msg_content,
 
 /*
  * Sends the components of a message in JSON format to specified file descriptor.
- * @param [usr] Required to display the sender's username in message. 
+ * @param [usr] Required to display the sender's username in message.
+ * Rest: self-explanatory. 
  * Returns status 1 (failure) or 0 (success).
 */
 int send_message(User *usr, char *msg_content, int socket_fd)
@@ -81,10 +83,11 @@ int send_message(User *usr, char *msg_content, int socket_fd)
 /*
  * Simply a wrapper for recv. Yup. All there is to it.
 */
-int receive_message(char *components_buffer, int socket_fd)
+int receive_message(char *components_buffer, size_t bufsize, int socket_fd)
 {
-    if (sizeof(components_buffer) == sizeof(char*))
-        fprintf(stderr, "\x1b[33mWarning: Unallocated char buffer passed in\n\x1b[0m");
+    if (bufsize < JSON_STRING_LENGTH)
+        fprintf(stderr, "\x1b[33mWarning: buffer might be too small.\
+                        Consider resizing the buffer to %zu.\n\x1b[0m", JSON_STRING_LENGTH);
 
     ssize_t bytes_received = recv(socket_fd,
                                   components_buffer,

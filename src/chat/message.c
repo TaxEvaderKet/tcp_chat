@@ -28,7 +28,7 @@ const size_t JSON_STRING_LENGTH = MAX_MESSAGE_LENGTH + 4 + 61;
 void format_msg_to_json(char *msg_content,
                         char *username,
                         int hh, int mm,
-                        char *str, size_t bufsize)
+                        char *message_buffer, size_t bufsize)
 {
     if (bufsize < JSON_STRING_LENGTH)
     {
@@ -39,7 +39,7 @@ void format_msg_to_json(char *msg_content,
 
     char json_string[JSON_STRING_LENGTH];
 
-    snprintf(json_string, sizeof json_string,
+    snprintf(json_string, sizeof(json_string),
              "{\
                 \"msg_content\": \"%s\",\
                 \"sender\": \"%s\",\
@@ -48,7 +48,7 @@ void format_msg_to_json(char *msg_content,
             }",
             msg_content, username, hh, mm);
 
-    strncpy(str, json_string, JSON_STRING_LENGTH);
+    strncpy(message_buffer, json_string, JSON_STRING_LENGTH);
 }
 
 /*

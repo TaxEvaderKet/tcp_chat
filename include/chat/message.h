@@ -4,7 +4,7 @@
 #define MAX_MESSAGE_LENGTH (MAX_DECORATIONS_LENGTH + MAX_CONTENT_LENGTH)
 
 #include "../user_auth/user_auth.h"
-#include <stdlib.h>
+#include <stddef.h>
 
 extern const size_t JSON_STRING_LENGTH;
 extern const size_t FMT_CHARS;

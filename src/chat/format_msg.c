@@ -3,9 +3,10 @@
 #include <cjson/cJSON.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 // This is just a default format. You are encouraged to tweak this to your liking.
-const char *fmt_string = "%02d:%02d | %s\n%s";
+const char *fmt_string = "%02u:%02u | %s\n%s";
 
 void json_to_msg(char *msg_buffer, char *json_string, const char *fmt_string)
 {
@@ -28,10 +29,9 @@ void json_to_msg(char *msg_buffer, char *json_string, const char *fmt_string)
 
     char msg_content[MAX_CONTENT_LENGTH];
     char sender[MAX_USERNAME_LENGTH];
-
-    // Zero-padded hours and minutes.
-    char hour[2];
-    char minute[2];
+    uint8_t hour;
+    uint8_t minute;
 
     // TODO: Idk, like, the rest of the function. Procrastinate it to tomorrow, no worries.
+     
 }

@@ -1,9 +1,11 @@
 #ifndef USER_AUTH_H
 #define USER_AUTH_H
-#define MAX_PASSWORD_LENGTH 64
+#define MAX_PASSWORD_LENGTH 128
 #define MAX_USERNAME_LENGTH 32
 #define SALT_LENGTH 16
 #define FILE_PERMISSIONS 0644 /* read, write, but not execute */
+
+extern const char *USERDATA_FILE_NAME;
 
 typedef struct 
 {
@@ -13,12 +15,15 @@ typedef struct
     int logged_in;
 } User;
 
-extern const int EINUSE;
-extern const char *USERDATA_FILE_NAME;
-
-enum actions {
+enum Actions {
     LOGOUT = 0,
     LOGIN = 1
+};
+
+enum Errors {
+    NAME_IN_USE = 2,
+    ALR_LOGGED_IN = 3,
+    INCORRECT_CREDS = 4,
 };
 
 /*

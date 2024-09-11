@@ -11,6 +11,7 @@
 #include <sys/socket.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdint.h>
 
 // Adjust these values according to your needs; they're meant to be modified.
 // These are just defaults.
@@ -27,14 +28,13 @@ const size_t JSON_STRING_LENGTH = MAX_MESSAGE_LENGTH + 4 + 61;
 */
 void format_msg_to_json(char *msg_content,
                         char *username,
-                        int hh, int mm,
+                        uint8_t hour, uint8_t minute,
                         char *message_buffer, size_t bufsize)
 {
     if (bufsize < JSON_STRING_LENGTH)
     {
-        fprintf(stderr, "\x1b[33mWarning: buffer smaller than\
-                        recommended size of %zu\n\x1b[0m",
-                JSON_STRING_LENGTH);
+        fprintf(stderr, "\x1b[33mWarning: buffer (size %zu) smaller than recommended size of %zu\n\x1b[0m", 
+                        bufsize, JSON_STRING_LENGTH);
     }
 
     char json_string[JSON_STRING_LENGTH];
@@ -43,10 +43,10 @@ void format_msg_to_json(char *msg_content,
              "{\
                 \"msg_content\": \"%s\",\
                 \"sender\": \"%s\",\
-                \"hour\": \"%02d\",\
-                \"minute\": \"%02d\"\
+                \"hour\": %02u,\
+                \"minute\": %02u\
             }",
-            msg_content, username, hh, mm);
+            msg_content, username, hour, minute);
 
     strncpy(message_buffer, json_string, JSON_STRING_LENGTH);
 }

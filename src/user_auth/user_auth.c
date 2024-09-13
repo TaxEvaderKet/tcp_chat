@@ -20,7 +20,7 @@
 
 // As I've said before, adjust the file name as needed.
 const int EINUSE = 2; 
-const char *USERDATA_FILE_NAME = "userdata"; 
+const char* USERDATA_FILE_NAME = "userdata"; 
 
 /*
  * Utility function. (Un)locks file descriptor. 

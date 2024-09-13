@@ -7,13 +7,13 @@
 */
 
 #include "../../include/chat/net.h"
+#include "../../include/util/util_macros.h"
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <netinet/ip.h>
 #include <limits.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 /*
@@ -25,10 +25,7 @@ int init_socket(portnum_t port)
 {
     if (port > USHRT_MAX || port < 1024)
     {
-        fprintf(stderr,
-                "\x1b[31mPort number cannot exceed %d\
-                or be less than 1024\n\x1b[0m", USHRT_MAX);
-        
+        COLOR_MSG(RED, stderr, "Port number must be between 1024 and 65535.");
         return EXIT_FAILURE;
     }
 

@@ -7,6 +7,7 @@
 */
 
 #include "../../include/chat/message.h"
+#include "../../include/util/util_macros.h"
 #include <time.h>
 #include <sys/socket.h>
 #include <string.h>
@@ -33,11 +34,8 @@ void format_msg_to_json(char *msg_content,
                         char *message_buffer, size_t bufsize)
 {
     if (bufsize < JSON_STRING_LENGTH)
-    {
-        fprintf(stderr, "\x1b[33mWarning: buffer (size %zu) smaller than recommended size of %zu\n\x1b[0m", 
-                        bufsize, JSON_STRING_LENGTH);
-    }
-
+        COLOR_MSG(RED, stderr, "Buffer might be too small. Consider resizing.");
+    
     char json_string[JSON_STRING_LENGTH];
 
     snprintf(json_string, sizeof(json_string),

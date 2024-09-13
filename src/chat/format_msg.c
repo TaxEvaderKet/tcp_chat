@@ -1,5 +1,6 @@
 #include "../../include/chat/message.h"
 #include "../../include/chat/format_msg.h"
+#include "../../include/util/util_macros.h"
 #include <cjson/cJSON.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,12 +9,12 @@
 // This is just a default format. You are encouraged to tweak this to your liking.
 const char *fmt_string = "%02u:%02u | %s\n%s";
 
-void json_to_msg(char *msg_buffer, char *json_string, const char *fmt_string)
+void json_to_msg(char *msg_buffer, size_t bufsize, 
+                 char *json_string, const char *fmt_string)
 {
-    if (sizeof(msg_buffer) < MAX_MESSAGE_LENGTH)
+    if (bufsize < MAX_MESSAGE_LENGTH)
     {
-        fprintf(stderr, "\x1b[33mWarning: buffer might be too small. " 
-                        "Resize to %zu\x1b[0m\n", MAX_MESSAGE_LENGTH);
+        COLOR_MSG(RED, stderr, "Message buffer is too small.");
     }
 
     cJSON *json = cJSON_Parse(json_string);
@@ -23,8 +24,8 @@ void json_to_msg(char *msg_buffer, char *json_string, const char *fmt_string)
         const char *error_ptr = cJSON_GetErrorPtr();
 
         if (error_ptr != NULL)
-            fprintf(stderr, "Error before %s\n", error_ptr);
-        
+            COLOR_MSG(RED, stderr, "Error before: %s\n", error_ptr);
+
         exit(EXIT_FAILURE);
     }
 
@@ -43,7 +44,7 @@ void json_to_msg(char *msg_buffer, char *json_string, const char *fmt_string)
     hour = hr->valueint;
     minute = min->valueint;
 
-    snprintf(msg_buffer, MAX_MESSAGE_LENGTH, 
+    snprintf(msg_buffer, bufsize, 
              fmt_string, hour, minute, sender, msg_content);
 
     cJSON_Delete(json);

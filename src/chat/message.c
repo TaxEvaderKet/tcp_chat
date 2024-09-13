@@ -12,6 +12,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 // Adjust these values according to your needs; they're meant to be modified.
 // These are just defaults.

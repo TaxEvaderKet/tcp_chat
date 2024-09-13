@@ -13,7 +13,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/out/bin)
 
 add_library(userauth SHARED ${LIBUSERAUTH_SOURCES})
 add_library(chat SHARED ${LIBCHAT_SOURCES})
-target_link_libraries(userauth sodium ssl crypto)
+target_link_libraries(userauth sodium ssl crypto cjson)
 
 add_executable(app ${APP_SOURCES})
 target_link_libraries(app userauth chat)

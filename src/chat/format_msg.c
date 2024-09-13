@@ -10,9 +10,10 @@ const char *fmt_string = "%02u:%02u | %s\n%s";
 
 void json_to_msg(char *msg_buffer, char *json_string, const char *fmt_string)
 {
-    if (sizeof(msg_buffer) > MAX_MESSAGE_LENGTH)
+    if (sizeof(msg_buffer) < MAX_MESSAGE_LENGTH)
     {
-        fprintf(stderr, "\x1b[33mWarning: buffer might be too small. Resize to %zu\x1b[0m\n", MAX_MESSAGE_LENGTH);
+        fprintf(stderr, "\x1b[33mWarning: buffer might be too small. " 
+                        "Resize to %zu\x1b[0m\n", MAX_MESSAGE_LENGTH);
     }
 
     cJSON *json = cJSON_Parse(json_string);
@@ -32,6 +33,18 @@ void json_to_msg(char *msg_buffer, char *json_string, const char *fmt_string)
     uint8_t hour;
     uint8_t minute;
 
-    // TODO: Idk, like, the rest of the function. Procrastinate it to tomorrow, no worries.
-     
+    cJSON *content = cJSON_GetObjectItem(json, "msg_content");
+    cJSON *usr = cJSON_GetObjectItem(json, "sender");
+    cJSON *hr = cJSON_GetObjectItem(json, "hour");
+    cJSON *min = cJSON_GetObjectItem(json, "minute");
+
+    snprintf(msg_content, sizeof(msg_content), "%s", content->valuestring);
+    snprintf(sender, sizeof(sender), "%s", usr->valuestring);
+    hour = hr->valueint;
+    minute = min->valueint;
+
+    snprintf(msg_buffer, MAX_MESSAGE_LENGTH, 
+             fmt_string, hour, minute, sender, msg_content);
+
+    cJSON_Delete(json);
 }

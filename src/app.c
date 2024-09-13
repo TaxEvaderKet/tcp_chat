@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 
     remove_newline(new_user.username);
 
-    if (logn(&new_user, LOGIN) == EXIT_SUCCESS) 
+    if (login_or_logout(&new_user, LOGIN) == EXIT_SUCCESS) 
     {
         OPENSSL_cleanse(usr.password, MAX_PASSWORD_LENGTH);
     }

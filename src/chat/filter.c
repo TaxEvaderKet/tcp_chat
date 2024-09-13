@@ -7,6 +7,7 @@
 */
 
 #include "../../include/chat/filter.h"
+#include "../../include/util/util_macros.h"
 
 /*
  * Takes in a string, finds substrings that match the given one, and replace it with the one specified.
@@ -20,16 +21,19 @@ void strreplace(char *str, const char *search, const char *replace)
     size_t replace_len = strlen(replace);
 
     if (search_len > strlen(str) || replace_len > strlen(str)) {
-        fprintf(stderr, "\x1b[31mSearch or replace string larger than input string.\n\x1b[0m");
+        COLOR_MSG(RED, stderr, "Search or replace string exceeds" 
+                                "the length of the input string.");
         exit(EXIT_FAILURE);
     }
     
-    size_t max_increase = (replace_len > search_len) ? (replace_len - search_len) : 0;    
+    size_t max_increase = (replace_len > search_len) 
+        ? (replace_len - search_len) 
+        : 0;    
     
     char buffer[strnlen(str, MAX_MESSAGE_LENGTH) + max_increase]; 
     
     if (sizeof(buffer) < strlen(str)) {
-        fprintf(stderr, "\x1b[31mSize of input string exceeds the maximum of the buffer.\n\x1b[0m");
+        COLOR_MSG(RED, stderr, "Buffer size is too small.");
         exit(EXIT_FAILURE);
     }
 

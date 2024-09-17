@@ -1,6 +1,6 @@
 // License: GPL 3.0 or later 
 /*********************************************
- * net.c: Simplifying socket stuff.          *   
+ * Simplifying socket stuff.                 *   
  * Copyright (C) 2023-2024 TaxEvaderKet      *
  * Full notice can be found in src/app.c     *
  *********************************************
@@ -15,18 +15,17 @@
 #include <netinet/ip.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <errno.h>
 
-/*
- * Creates and binds the server socket.
- * @param [port] unsigned short. Will be the port the server listens to.
- * @returns the server file descriptor, or 1 on error.
+/***************
+ * init_socket *
+ ***************
 */
-int init_socket(portnum_t port)
-{
-    if (port > USHRT_MAX || port < 1024)
-    {
+int init_socket(portnum_t port) {
+    if (port > USHRT_MAX || port < 1024) {
         COLOR_MSG(RED, stderr, "Port number must be between 1024 and 65535.");
-        return EXIT_FAILURE;
+        errno = EINVAL;
+        return -1;
     }
 
     int server_fd;
@@ -35,48 +34,42 @@ int init_socket(portnum_t port)
     server_addr.sin_port = htons(port);
     server_addr.sin_family = AF_INET;
 
-    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
-    {
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         perror("socket");
-        return EXIT_FAILURE;
+        return -1;
     }
 
     server_addr.sin_addr.s_addr = INADDR_ANY;
 
     if (bind(server_fd, 
              (struct sockaddr *)&server_addr, 
-             sizeof(server_addr)) == -1)
-    {
+             sizeof(server_addr)) == -1) {
         perror("bind");
-        return EXIT_FAILURE;
+        return -1;
     }
 
     return server_fd;
 }
 
-/*
- * Listens for connections and accepts.
- * @param [server_fd] the server socket's file descriptor.
- * @returns client file descriptor, or 1 on error. 
+/*********************
+ * accept_connection *
+ *********************
 */
-int accept_connection(int server_fd)
-{
+int accept_connection(int server_fd) {
     int client_fd;
     struct sockaddr_in client_addr;
     socklen_t client_addrlen = sizeof(client_addr);
     
-    if (listen(server_fd, MAX_BACKLOGS) == -1)
-    {
+    if (listen(server_fd, MAX_BACKLOGS) == -1) {
         perror("listen");
-        return EXIT_FAILURE;
+        return -1;
     }
 
     if ((client_fd = accept(server_fd,
                             (struct sockaddr *)&client_addr, 
-                            &client_addrlen)) == -1)
-    {
+                            &client_addrlen)) == -1) {
         perror("accept");
-        return EXIT_FAILURE;
+        return -1;
     }
     
     return client_fd;

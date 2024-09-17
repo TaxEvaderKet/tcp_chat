@@ -9,14 +9,11 @@
 #include "../../include/chat/filter.h"
 #include "../../include/util/util_macros.h"
 
-/*
- * Takes in a string, finds substrings that match the given one, and replace it with the one specified.
- * @param [str] The string you want substrings to be replaced in.
- * @param [search] The substring that is to be replaced.
- * @param [replace] The substring that [search] is replaced with, if found.
+/**************
+ * strreplace *
+ **************
 */
-void strreplace(char *str, const char *search, const char *replace)
-{
+void strreplace(char *str, const char *search, const char *replace) {
     size_t search_len = strlen(search);
     size_t replace_len = strlen(replace);
 
@@ -39,8 +36,7 @@ void strreplace(char *str, const char *search, const char *replace)
 
     char *p = str;
     
-    while ((p = strstr(p, search)))
-    {
+    while ((p = strstr(p, search))) {
         strncpy(buffer, str, p - str);
         buffer[p - str] = '\0';
         strncat(buffer, replace, MAX_REPLACE_SIZE - 1);

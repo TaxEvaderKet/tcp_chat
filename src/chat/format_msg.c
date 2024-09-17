@@ -6,21 +6,17 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-// This is just a default format. You are encouraged to tweak this to your liking.
 const char *fmt_string = "%02u:%02u | %s\n%s";
 
 void json_to_msg(char *msg_buffer, size_t bufsize, 
-                 char *json_string, const char *fmt_string)
-{
-    if (bufsize < MAX_MESSAGE_LENGTH)
-    {
+                 char *json_string, const char *fmt_string) {
+    if (bufsize < MAX_MESSAGE_LENGTH) {
         COLOR_MSG(RED, stderr, "Message buffer is too small.");
     }
 
     cJSON *json = cJSON_Parse(json_string);
     
-    if (json == NULL)
-    {
+    if (json == NULL) {
         const char *error_ptr = cJSON_GetErrorPtr();
 
         if (error_ptr != NULL)

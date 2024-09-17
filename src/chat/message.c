@@ -15,14 +15,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-// Adjust these values according to your needs; they're meant to be modified.
-// These are just defaults.
+#define JSON_CHARS 65
+
 const size_t FMT_CHARS = 9;
 const size_t MAX_CONTENT_LENGTH = 2048;
 
-// 4 = hours and minutes, 61 = JSON string chars
-// username accounted for in MAX_MESSAGE_LENGTH, see message.h for details.
-const size_t JSON_STRING_LENGTH = MAX_MESSAGE_LENGTH + 4 + 61;
+const size_t JSON_STRING_LENGTH = MAX_CONTENT_LENGTH + MAX_USERNAME_LENGTH + JSON_CHARS;
 
 /*
  * Utility function. Takes in message components and puts them into a JSON string.
@@ -31,11 +29,11 @@ const size_t JSON_STRING_LENGTH = MAX_MESSAGE_LENGTH + 4 + 61;
 void format_msg_to_json(char *msg_content,
                         char *username,
                         uint8_t hour, uint8_t minute,
-                        char *message_buffer, size_t bufsize)
-{
-    if (bufsize < JSON_STRING_LENGTH)
+                        char *message_buffer, size_t bufsize) {
+    if (bufsize < JSON_STRING_LENGTH) {
         COLOR_MSG(RED, stderr, "Buffer might be too small. Consider resizing.");
-    
+    }
+
     char json_string[JSON_STRING_LENGTH];
 
     snprintf(json_string, sizeof(json_string),
@@ -56,8 +54,7 @@ void format_msg_to_json(char *msg_content,
  * Rest: self-explanatory. 
  * Returns status 1 (failure) or 0 (success).
 */
-int send_message(User *usr, char *msg_content, int socket_fd)
-{
+int send_message(User *usr, char *msg_content, int socket_fd) {
     time_t current_time = time(NULL);
     struct tm *time_info = localtime(&current_time);
     int hours = time_info->tm_hour;
@@ -70,8 +67,7 @@ int send_message(User *usr, char *msg_content, int socket_fd)
                        sizeof(stringified_components));
 
     if (send(socket_fd, stringified_components,
-             strlen(stringified_components), 0) == -1)
-    {
+             strlen(stringified_components), 0) == -1) {
         perror("send");
         return EXIT_FAILURE;
     }
@@ -82,15 +78,13 @@ int send_message(User *usr, char *msg_content, int socket_fd)
 /*
  * Simply a wrapper for recv. Yup. All there is to it.
 */
-int receive_message(char *components_buffer, size_t bufsize, int socket_fd)
-{
-    if (bufsize < JSON_STRING_LENGTH)
-        fprintf(stderr, "\x1b[33mWarning: buffer might be too small.\
-                        Consider resizing the buffer to %zu.\n\x1b[0m", JSON_STRING_LENGTH);
+int receive_message(char *components_buffer, size_t bufsize, int socket_fd) {
+    if (bufsize < JSON_STRING_LENGTH) {
+        fprintf(stderr, "\x1b[33mWarning: buffer might be too small. "
+                "Consider resizing the buffer to %zu.\n\x1b[0m", JSON_STRING_LENGTH);
+    }
 
-    ssize_t bytes_received = recv(socket_fd,
-                                  components_buffer,
-                                  sizeof(components_buffer), 0);
+    ssize_t bytes_received = recv(socket_fd, components_buffer, sizeof(components_buffer), 0);
 
     if (bytes_received < 0) {
         perror("recv");
@@ -99,3 +93,5 @@ int receive_message(char *components_buffer, size_t bufsize, int socket_fd)
 
     return EXIT_SUCCESS;
 }
+
+#undef JSON_CHARS

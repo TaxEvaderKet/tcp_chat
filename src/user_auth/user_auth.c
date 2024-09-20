@@ -1,12 +1,3 @@
-// License: GPL 3.0 or later
-/********************************************************************************
-* user_auth handles secure password storage, login, and logout using libsodium. *
-* This file is part of TCP_CHAT.                                                *
-* Copyright (C) 2023-2024 TaxEvaderKet                                          *
-* Full notice can be found in src/app.c                                         *
-*********************************************************************************
-*/
-
 #include "../../include/user_auth/user_auth.h"
 #include "../../include/util/util_macros.h"
 #include <sodium/crypto_pwhash.h>

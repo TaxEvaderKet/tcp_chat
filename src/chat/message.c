@@ -1,11 +1,3 @@
-// License: GPL 3.0 or later
-/********************************************************************************************************
- * This is a utility for sending and receiving message contents in JSON. Formatting occurs separately.  *
- * Copyright (C) 2023-2024 TaxEvaderKet                                                                 *
- * Full notice can be found in src/app.c                                                                *
- ********************************************************************************************************
-*/
-
 #include "../../include/chat/message.h"
 #include "../../include/util/util_macros.h"
 #include <time.h>

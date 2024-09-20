@@ -1,11 +1,3 @@
-// License: GNU GPL 3.0 or later
-/******************************************************************************************************************
- * This file only provides one function, which will serve the purpose of input sanitization. (among other things) *
- * Copyright (C) 2023 TaxEvaderKet                                                                                *
- * Full notice can be found in src/app.c                                                                          *
- ******************************************************************************************************************
-*/
-
 #include "../../include/chat/filter.h"
 #include "../../include/util/util_macros.h"
 

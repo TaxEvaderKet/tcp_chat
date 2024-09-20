@@ -1,11 +1,3 @@
-// License: GPL 3.0 or later 
-/*********************************************
- * Simplifying socket stuff.                 *   
- * Copyright (C) 2023-2024 TaxEvaderKet      *
- * Full notice can be found in src/app.c     *
- *********************************************
-*/
-
 #include "../../include/chat/net.h"
 #include "../../include/util/util_macros.h"
 #include <netinet/in.h>
@@ -14,7 +6,6 @@
 #include <unistd.h>
 #include <netinet/ip.h>
 #include <limits.h>
-#include <stdlib.h>
 #include <errno.h>
 
 /***************

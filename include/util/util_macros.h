@@ -9,8 +9,6 @@
 #define BLUE "34"
 
 #define COLOR_MSG(color, fd, fmt, ...)\
-    fprintf(fd, "\x1b[%sm", color);\
-    fprintf(fd, fmt, ##__VA_ARGS__);\
-    fprintf(fd, "\x1b[0m\n");
+    fprintf(fd, "\x1b[%sm" fmt "\x1b[0m\n", color, ##__VA_ARGS__);
 
 #endif // !UTIL_MACROS_H
